@@ -35,6 +35,7 @@ namespace gcgcg
     int mouseX, mouseY;   //TODO: achar método MouseDown para não ter variável Global
     private bool mouseMoverPto = false;
     private Retangulo obj_Retangulo;
+    private Circulo obj_Circulo;
 #if CG_Privado
     private Privado_SegReta obj_SegReta;
     private Privado_Circulo obj_Circulo;
@@ -43,19 +44,19 @@ namespace gcgcg
     protected override void OnLoad(EventArgs e)
     {
       base.OnLoad(e);
-      camera.xmin = 0; camera.xmax = 600; camera.ymin = 0; camera.ymax = 600;
+      camera.xmin = -300; camera.xmax = 300; camera.ymin = -300; camera.ymax = 300;
 
       Console.WriteLine(" --- Ajuda / Teclas: ");
       Console.WriteLine(" [  H     ] mostra teclas usadas. ");
 
       objetoId = Utilitario.charProximo(objetoId);
-      obj_Retangulo = new Retangulo(objetoId, null, new Ponto4D(50, 50, 0), new Ponto4D(150, 150, 0));
-      obj_Retangulo.ObjetoCor.CorR = 255; obj_Retangulo.ObjetoCor.CorG = 0; obj_Retangulo.ObjetoCor.CorB = 255;
-      objetosLista.Add(obj_Retangulo);
-      objetoSelecionado = obj_Retangulo;
+      obj_Circulo = new Circulo(objetoId, null, 100);
+      obj_Circulo.ObjetoCor.CorR = 255; obj_Circulo.ObjetoCor.CorG = 255; obj_Circulo.ObjetoCor.CorB = 0;
+      objetosLista.Add(obj_Circulo);
+      objetoSelecionado = obj_Circulo;
 
 #if CG_Privado
-      objetoId = Utilitario.charProximo(objetoId);
+      /*objetoId = Utilitario.charProximo(objetoId);
       obj_SegReta = new Privado_SegReta(objetoId, null, new Ponto4D(50, 150), new Ponto4D(150, 250));
       obj_SegReta.ObjetoCor.CorR = 255; obj_SegReta.ObjetoCor.CorG = 255; obj_SegReta.ObjetoCor.CorB = 0;
       objetosLista.Add(obj_SegReta);
@@ -65,7 +66,7 @@ namespace gcgcg
       obj_Circulo = new Privado_Circulo(objetoId, null, new Ponto4D(100, 300), 50);
       obj_Circulo.ObjetoCor.CorR = 0; obj_Circulo.ObjetoCor.CorG = 255; obj_Circulo.ObjetoCor.CorB = 255;
       objetosLista.Add(obj_Circulo);
-      objetoSelecionado = obj_Circulo;
+      objetoSelecionado = obj_Circulo;*/
 #endif
       GL.ClearColor(0.5f, 0.5f, 0.5f, 1.0f);
     }
@@ -94,22 +95,34 @@ namespace gcgcg
 
     protected override void OnKeyDown(OpenTK.Input.KeyboardKeyEventArgs e)
     {
+
       if (e.Key == Key.H)
         Utilitario.AjudaTeclado();
       else if (e.Key == Key.Escape)
         Exit();
       else if (e.Key == Key.E)
       {
-        Console.WriteLine("--- Objetos / Pontos: ");
-        for (var i = 0; i < objetosLista.Count; i++)
-        {
-          Console.WriteLine(objetosLista[i]);
-        }
+        camera.PanEsquerda();
+        //Console.WriteLine("--- Objetos / Pontos: ");
+       // for (var i = 0; i < objetosLista.Count; i++)
+        //{
+        //  Console.WriteLine(objetosLista[i]);
+        //}
       }
       else if (e.Key == Key.O)
-        bBoxDesenhar = !bBoxDesenhar;
+        //bBoxDesenhar = !bBoxDesenhar;
+        camera.ZoomOut();
       else if (e.Key == Key.V)
         mouseMoverPto = !mouseMoverPto;   //TODO: falta atualizar a BBox do objeto
+      else if(e.Key == Key.I){
+        camera.ZoomIn();
+      } else if (e.Key == Key.D){
+        camera.PanDireita();
+      } else if (e.Key == Key.C){
+        camera.PanCima();
+      } else if (e.Key == Key.B){
+        camera.PanBaixo();
+      }
       else
         Console.WriteLine(" __ Tecla não implementada.");
     }
