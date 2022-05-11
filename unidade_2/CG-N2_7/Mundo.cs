@@ -45,57 +45,28 @@ namespace gcgcg
     protected override void OnLoad(EventArgs e)
     {
       base.OnLoad(e);
-      camera.xmin = -300; camera.xmax = 300; camera.ymin = -300; camera.ymax = 300;
+      camera.xmin = 0; camera.xmax = 600; camera.ymin = 0; camera.ymax = 600;
 
       Console.WriteLine(" --- Ajuda / Teclas: ");
       Console.WriteLine(" [  H     ] mostra teclas usadas. ");
       
-      Ponto4D p1 = new Ponto4D(0, 100);
+      Ponto4D p1 = new Ponto4D(300, 300);
       Ponto4D p2 = new Ponto4D(-100, -100);
       Ponto4D p3 = new Ponto4D(100, -100);
 
       //P1
       objetoId = Utilitario.charProximo(objetoId);
-      obj_Circulo = new Circulo(objetoId, null, p1, 100);
+      obj_Circulo = new Circulo(objetoId, null, p1, 50);
       obj_Circulo.ObjetoCor.CorR = 0; obj_Circulo.ObjetoCor.CorG = 0; obj_Circulo.ObjetoCor.CorB = 0;
       objetosLista.Add(obj_Circulo);
       objetoSelecionado = obj_Circulo;
 
       //P2
       objetoId = Utilitario.charProximo(objetoId);
-      obj_Circulo = new Circulo(objetoId, null, p2, 100);
+      obj_Circulo = new Circulo(objetoId, null, p1, 200);
       obj_Circulo.ObjetoCor.CorR = 0; obj_Circulo.ObjetoCor.CorG = 0; obj_Circulo.ObjetoCor.CorB = 0;
       objetosLista.Add(obj_Circulo);
       objetoSelecionado = obj_Circulo;
-
-      //P3
-      objetoId = Utilitario.charProximo(objetoId);
-      obj_Circulo = new Circulo(objetoId, null, p3, 100);
-      obj_Circulo.ObjetoCor.CorR = 0; obj_Circulo.ObjetoCor.CorG = 0; obj_Circulo.ObjetoCor.CorB = 0;
-      objetosLista.Add(obj_Circulo);
-      objetoSelecionado = obj_Circulo;
-
-      //Segmento de reta P1
-      objetoId = Utilitario.charProximo(objetoId);
-      obj_SegReta = new SegReta(objetoId, null, p1, p2);
-      obj_SegReta.ObjetoCor.CorR = 0; obj_SegReta.ObjetoCor.CorG = 255; obj_SegReta.ObjetoCor.CorB = 255;
-      objetosLista.Add(obj_SegReta);
-      objetoSelecionado = obj_SegReta;
-
-      //Segmento de reta P2
-      objetoId = Utilitario.charProximo(objetoId);
-      obj_SegReta = new SegReta(objetoId, null, p2, p3);
-      obj_SegReta.ObjetoCor.CorR = 0; obj_SegReta.ObjetoCor.CorG = 255; obj_SegReta.ObjetoCor.CorB = 255;
-      objetosLista.Add(obj_SegReta);
-      objetoSelecionado = obj_SegReta;
-
-      //Segmento de reta P3
-      objetoId = Utilitario.charProximo(objetoId);
-      obj_SegReta = new SegReta(objetoId, null, p3, p1);
-      obj_SegReta.ObjetoCor.CorR = 0; obj_SegReta.ObjetoCor.CorG = 255; obj_SegReta.ObjetoCor.CorB = 255;
-      objetosLista.Add(obj_SegReta);
-      objetoSelecionado = obj_SegReta;
-
 
 #if CG_Privado
       /*objetoId = Utilitario.charProximo(objetoId);
