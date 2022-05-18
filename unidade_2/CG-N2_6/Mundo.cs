@@ -37,8 +37,19 @@ namespace gcgcg
     private Retangulo obj_Retangulo;
     private Circulo obj_Circulo;
     private SegReta obj_SegReta;
-    private PrimitiveType[] types = new PrimitiveType[] { PrimitiveType.Points, PrimitiveType.Lines, PrimitiveType.LineLoop, PrimitiveType.LineStrip, PrimitiveType.Triangles, PrimitiveType.TriangleStrip, PrimitiveType.TriangleFan, PrimitiveType.Quads, PrimitiveType.QuadStrip, PrimitiveType.Polygon };
-    private int actualType = 0;
+
+    private Ponto4D a = new Ponto4D(-100, -100);
+    private Ponto pontoA;
+    private SegReta segA;
+    private Ponto4D b = new Ponto4D(-100, 100);
+    private Ponto pontoB;
+    private SegReta segB;
+    private Ponto4D c = new Ponto4D(100, 100);
+    private Ponto pontoC;
+    private SegReta segC;
+    private Ponto4D d = new Ponto4D(100, -100);
+    private Ponto pontoD;
+    private Spline splineD;
 #if CG_Privado
     private Privado_SegReta obj_SegReta;
     private Privado_Circulo obj_Circulo;
@@ -47,10 +58,59 @@ namespace gcgcg
     protected override void OnLoad(EventArgs e)
     {
       base.OnLoad(e);
-      camera.xmin = -300; camera.xmax = 300; camera.ymin = -300; camera.ymax = 300;
+      camera.xmin = -400; camera.xmax = 400; camera.ymin = -400; camera.ymax = 400;
 
       Console.WriteLine(" --- Ajuda / Teclas: ");
       Console.WriteLine(" [  H     ] mostra teclas usadas. ");
+
+      //Ponto 1
+      objetoId = Utilitario.charProximo(objetoId);
+      pontoA = new Ponto(objetoId, null, this.a);
+      pontoA.ObjetoCor.CorR = 0; pontoA.ObjetoCor.CorG = 0; pontoA.ObjetoCor.CorB = 0;
+      objetosLista.Add(pontoA);
+
+      //Ponto 2
+      objetoId = Utilitario.charProximo(objetoId);
+      pontoB = new Ponto(objetoId, null, this.b);
+      pontoB.ObjetoCor.CorR = 0; pontoB.ObjetoCor.CorG = 0; pontoB.ObjetoCor.CorB = 0;
+      objetosLista.Add(pontoB);
+
+      //Ponto 3
+      objetoId = Utilitario.charProximo(objetoId);
+      pontoC = new Ponto(objetoId, null, this.c);
+      pontoC.ObjetoCor.CorR = 0; pontoC.ObjetoCor.CorG = 0; pontoC.ObjetoCor.CorB = 0;
+      objetosLista.Add(pontoC);
+
+      //Ponto 4
+      objetoId = Utilitario.charProximo(objetoId);
+      pontoD = new Ponto(objetoId, null, this.d);
+      pontoD.ObjetoCor.CorR = 255; pontoD.ObjetoCor.CorG = 0; pontoD.ObjetoCor.CorB = 0;
+      objetosLista.Add(pontoD);
+      objetoSelecionado = pontoD;
+
+      //SegReta1p2
+      objetoId = Utilitario.charProximo(objetoId);
+      segA = new SegReta(objetoId, null, this.a, this.b);
+      segA.ObjetoCor.CorR = 0; segA.ObjetoCor.CorG = 255; segA.ObjetoCor.CorB = 255;
+      objetosLista.Add(segA);
+
+      //SegReta2p3
+      objetoId = Utilitario.charProximo(objetoId);
+      segB = new SegReta(objetoId, null, this.b, this.c);
+      segB.ObjetoCor.CorR = 0; segB.ObjetoCor.CorG = 255; segB.ObjetoCor.CorB = 255;
+      objetosLista.Add(segB);
+
+      //SegReta3p4
+      objetoId = Utilitario.charProximo(objetoId);
+      segC = new SegReta(objetoId, null, this.c, this.d);
+      segC.ObjetoCor.CorR = 0; segC.ObjetoCor.CorG = 255; segC.ObjetoCor.CorB = 255;
+      objetosLista.Add(segC);
+
+      //SegReta3p4
+      objetoId = Utilitario.charProximo(objetoId);
+      splineD = new Spline(objetoId, null, this.a, this.b, this.c, this.d, 10);
+      splineD.ObjetoCor.CorR = 255; splineD.ObjetoCor.CorG = 255; splineD.ObjetoCor.CorB = 0;
+      objetosLista.Add(splineD);
 
 #if CG_Privado
       /*objetoId = Utilitario.charProximo(objetoId);
@@ -99,12 +159,19 @@ namespace gcgcg
         Exit();
       else if (e.Key == Key.E)
       {
-        camera.PanEsquerda();
-        //Console.WriteLine("--- Objetos / Pontos: ");
-       // for (var i = 0; i < objetosLista.Count; i++)
-        //{
-        //  Console.WriteLine(objetosLista[i]);
-        //}
+        if (objetoSelecionado == pontoA) {
+            this.a.X -= 2;
+        } else if (objetoSelecionado == pontoB) {
+            this.b.X -= 2;
+        } else if (objetoSelecionado == pontoC) {
+            this.c.X -= 2;
+        } else if (objetoSelecionado == pontoD) {
+            this.d.X -= 2;
+        }
+        objetoId = Utilitario.charProximo(objetoId);
+        splineD = new Spline(objetoId, null, this.a, this.b, this.c, this.d, 10);
+        splineD.ObjetoCor.CorR = 255; splineD.ObjetoCor.CorG = 255; splineD.ObjetoCor.CorB = 0;
+        objetosLista.Add(splineD);
       }
       else if (e.Key == Key.O)
         //bBoxDesenhar = !bBoxDesenhar;
@@ -114,16 +181,65 @@ namespace gcgcg
       else if(e.Key == Key.I){
         camera.ZoomIn();
       } else if (e.Key == Key.D){
-        camera.PanDireita();
-      } else if (e.Key == Key.C){
-        camera.PanCima();
-      } else if (e.Key == Key.B){
-        camera.PanBaixo();
-      } else if (e.Key == Key.Space) {
-        actualType++;
-        if (actualType == types.Length - 1) {
-          actualType = 0;
+        if (objetoSelecionado == pontoA) {
+            this.a.X += 2;
+        } else if (objetoSelecionado == pontoB) {
+            this.b.X += 2;
+        } else if (objetoSelecionado == pontoC) {
+            this.c.X += 2;
+        } else if (objetoSelecionado == pontoD) {
+            this.d.X += 2;
         }
+      } else if (e.Key == Key.C){
+        if (objetoSelecionado == pontoA) {
+            this.a.Y += 2;
+        } else if (objetoSelecionado == pontoB) {
+            this.b.Y += 2;
+        } else if (objetoSelecionado == pontoC) {
+            this.c.Y += 2;
+        } else if (objetoSelecionado == pontoD) {
+            this.d.Y += 2;
+        }
+      } else if (e.Key == Key.B){
+        if (objetoSelecionado == pontoA) {
+            this.a.Y -= 2;
+        } else if (objetoSelecionado == pontoB) {
+            this.b.Y -= 2;
+        } else if (objetoSelecionado == pontoC) {
+            this.c.Y -= 2;
+        } else if (objetoSelecionado == pontoD) {
+            this.d.Y -= 2;
+        }
+      } else if (e.Key == Key.Number1) {
+        objetoSelecionado.ObjetoCor.CorR = 0; objetoSelecionado.ObjetoCor.CorG = 0; objetoSelecionado.ObjetoCor.CorB = 0;
+        objetoSelecionado = pontoA;
+        objetoSelecionado.ObjetoCor.CorR = 255; objetoSelecionado.ObjetoCor.CorG = 0; objetoSelecionado.ObjetoCor.CorB = 0;
+      } else if (e.Key == Key.Number2) {
+        objetoSelecionado.ObjetoCor.CorR = 0; objetoSelecionado.ObjetoCor.CorG = 0; objetoSelecionado.ObjetoCor.CorB = 0;
+        objetoSelecionado = pontoB;
+        objetoSelecionado.ObjetoCor.CorR = 255; objetoSelecionado.ObjetoCor.CorG = 0; objetoSelecionado.ObjetoCor.CorB = 0;
+      } else if (e.Key == Key.Number3) {
+        objetoSelecionado.ObjetoCor.CorR = 0; objetoSelecionado.ObjetoCor.CorG = 0; objetoSelecionado.ObjetoCor.CorB = 0;
+        objetoSelecionado = pontoC;
+        objetoSelecionado.ObjetoCor.CorR = 255; objetoSelecionado.ObjetoCor.CorG = 0; objetoSelecionado.ObjetoCor.CorB = 0;
+      } else if (e.Key == Key.Number4) {
+        objetoSelecionado.ObjetoCor.CorR = 0; objetoSelecionado.ObjetoCor.CorG = 0; objetoSelecionado.ObjetoCor.CorB = 0;
+        objetoSelecionado = pontoD;
+        objetoSelecionado.ObjetoCor.CorR = 255; objetoSelecionado.ObjetoCor.CorG = 0; objetoSelecionado.ObjetoCor.CorB = 0;
+      } else if (e.Key == Key.X) {
+        Console.WriteLine("É XUXA");
+      } else if (e.Key == Key.R) {
+        this.a.X = -100;
+        this.a.Y = -100;
+        this.b.X = -100;
+        this.b.Y = 100;
+        this.c.X = 100;
+        this.c.Y = 100;
+        this.d.X = 100;
+        this.d.Y = -100;
+        objetoSelecionado.ObjetoCor.CorR = 0; objetoSelecionado.ObjetoCor.CorG = 0; objetoSelecionado.ObjetoCor.CorB = 0;
+        objetoSelecionado = pontoD;
+        objetoSelecionado.ObjetoCor.CorR = 255; objetoSelecionado.ObjetoCor.CorG = 0; objetoSelecionado.ObjetoCor.CorB = 0;
       }
       else
         Console.WriteLine(" __ Tecla não implementada.");
@@ -143,20 +259,17 @@ namespace gcgcg
 #if CG_Gizmo
     private void Sru3D()
     {
-      GL.LineWidth(3);
-      GL.Begin(types[actualType]);
+      GL.LineWidth(1);
+      GL.Begin(PrimitiveType.Lines);
       // GL.Color3(1.0f,0.0f,0.0f);
-      GL.Color3(Convert.ToByte(255), Convert.ToByte(0), Convert.ToByte(255));
-      GL.Vertex3(-200, 200, 0);
+      GL.Color3(Convert.ToByte(255), Convert.ToByte(0), Convert.ToByte(0));
+      GL.Vertex3(0, 0, 0); GL.Vertex3(200, 0, 0);
       // GL.Color3(0.0f,1.0f,0.0f);
-      GL.Color3(Convert.ToByte(255), Convert.ToByte(0), Convert.ToByte(127));
-      GL.Vertex3(200, 200, 0);
+      GL.Color3(Convert.ToByte(0), Convert.ToByte(255), Convert.ToByte(0));
+      GL.Vertex3(0, 0, 0); GL.Vertex3(0, 200, 0);
       // GL.Color3(0.0f,0.0f,1.0f);
-      GL.Color3(Convert.ToByte(0), Convert.ToByte(0), Convert.ToByte(0));
-      GL.Vertex3(200, -200, 0);
-      // GL.Color3(0.0f,0.0f,1.0f);
-      GL.Color3(Convert.ToByte(255), Convert.ToByte(255), Convert.ToByte(0));
-      GL.Vertex3(-200, -200, 0);
+      GL.Color3(Convert.ToByte(0), Convert.ToByte(0), Convert.ToByte(255));
+      GL.Vertex3(0, 0, 0); GL.Vertex3(0, 0, 200);
       GL.End();
     }
 #endif    

@@ -145,18 +145,18 @@ namespace gcgcg
     {
       GL.LineWidth(3);
       GL.Begin(types[actualType]);
-      // GL.Color3(1.0f,0.0f,0.0f);
-      GL.Color3(Convert.ToByte(255), Convert.ToByte(0), Convert.ToByte(255));
-      GL.Vertex3(-200, 200, 0);
-      // GL.Color3(0.0f,1.0f,0.0f);
-      GL.Color3(Convert.ToByte(255), Convert.ToByte(0), Convert.ToByte(127));
-      GL.Vertex3(200, 200, 0);
-      // GL.Color3(0.0f,0.0f,1.0f);
-      GL.Color3(Convert.ToByte(0), Convert.ToByte(0), Convert.ToByte(0));
-      GL.Vertex3(200, -200, 0);
-      // GL.Color3(0.0f,0.0f,1.0f);
+      // Ponto 4
       GL.Color3(Convert.ToByte(255), Convert.ToByte(255), Convert.ToByte(0));
       GL.Vertex3(-200, -200, 0);
+      // Ponto 3
+      GL.Color3(Convert.ToByte(0), Convert.ToByte(0), Convert.ToByte(0));
+      GL.Vertex3(200, -200, 0);
+      // Ponto 2
+      GL.Color3(Convert.ToByte(255), Convert.ToByte(0), Convert.ToByte(127));
+      GL.Vertex3(200, 200, 0);
+      // Ponto 1
+      GL.Color3(Convert.ToByte(0), Convert.ToByte(255), Convert.ToByte(255));
+      GL.Vertex3(-200, 200, 0);
       GL.End();
     }
 #endif    
