@@ -3,22 +3,22 @@ using CG_Biblioteca;
 
 namespace gcgcg
 {
-    internal class Circulo : ObjetoGeometria
+    internal class SegReta : ObjetoGeometria
     {
 
-        public Circulo(char rotulo, Objeto pai, Ponto4D ptoCentro, long raio) : base(rotulo, pai)
+        public SegReta(char rotulo, Objeto pai, Ponto4D ptoIni, Ponto4D ptoFim) : base(rotulo, pai)
         {
-            Ponto4D ponto = new Ponto4D();
-            for (double i = ptoCentro.X; i < ptoCentro.X + 360; i += 1) {
-                ponto = Matematica.GerarPtosCirculo(i, raio);
-                ponto.X += ptoCentro.X;
-                ponto.Y += ptoCentro.Y;
-                base.PontosAdicionar(ponto);  
-            }
+            base.PontosAdicionar(ptoIni);
+            base.PontosAdicionar(ptoFim);
+        }
+
+        public void atualizar(Ponto4D ptoIni, Ponto4D ptoFim) {
+            base.PontosAdicionar(ptoIni);
+            base.PontosAdicionar(ptoFim);
         }
         protected override void DesenharObjeto()
         {
-            GL.LineWidth(1);
+            GL.PointSize(3);
             GL.Begin(PrimitiveType.LineLoop);
             foreach (Ponto4D pto in pontosLista)
             {

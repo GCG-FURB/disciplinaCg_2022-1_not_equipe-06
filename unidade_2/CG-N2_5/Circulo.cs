@@ -9,7 +9,7 @@ namespace gcgcg
         public Circulo(char rotulo, Objeto pai, Ponto4D ptoCentro, long raio) : base(rotulo, pai)
         {
             Ponto4D ponto = new Ponto4D();
-            for (double i = ptoCentro.X; i < ptoCentro.X + 360; i += 1) {
+            for (double i = ptoCentro.X; i < ptoCentro.X + 360; i += 5) {
                 ponto = Matematica.GerarPtosCirculo(i, raio);
                 ponto.X += ptoCentro.X;
                 ponto.Y += ptoCentro.Y;
@@ -18,8 +18,8 @@ namespace gcgcg
         }
         protected override void DesenharObjeto()
         {
-            GL.LineWidth(1);
-            GL.Begin(PrimitiveType.LineLoop);
+            GL.PointSize(3);
+            GL.Begin(PrimitiveType.Points);
             foreach (Ponto4D pto in pontosLista)
             {
                 GL.Vertex2(pto.X, pto.Y);

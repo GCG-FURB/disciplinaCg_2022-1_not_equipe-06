@@ -36,9 +36,11 @@ namespace gcgcg
     private bool mouseMoverPto = false;
     private Retangulo obj_Retangulo;
     private Circulo obj_Circulo;
-    private Circulo obj_Circulo2;
     private SegReta obj_SegReta;
-    private Ponto obj_Ponto;
+    private int raio;
+    private int angulo;
+    private Ponto4D pontoCentral;
+    private Ponto4D pontoFinal;
 #if CG_Privado
     private Privado_SegReta obj_SegReta;
     private Privado_Circulo obj_Circulo;
@@ -47,42 +49,21 @@ namespace gcgcg
     protected override void OnLoad(EventArgs e)
     {
       base.OnLoad(e);
-      camera.xmin = 0; camera.xmax = 600; camera.ymin = 0; camera.ymax = 600;
+      camera.xmin = -300; camera.xmax = 300; camera.ymin = -300; camera.ymax = 300;
 
       Console.WriteLine(" --- Ajuda / Teclas: ");
       Console.WriteLine(" [  H     ] mostra teclas usadas. ");
-      
-      Ponto4D p1 = new Ponto4D(300, 300);
-      Ponto4D p2 = new Ponto4D(-100, -100);
-      Ponto4D p3 = new Ponto4D(100, -100);
-      int raio1 = 50;
-      int raio2 = 200;
+
+      raio = 100;
+      angulo = 45;
+      pontoCentral = new Ponto4D(0,0);
+      pontoFinal = Matematica.GerarPtosCirculo(angulo, raio);
 
       objetoId = Utilitario.charProximo(objetoId);
-      obj_Ponto = new Ponto(objetoId, null, p1);
-      obj_Ponto.ObjetoCor.CorR = 0; obj_Ponto.ObjetoCor.CorG = 0; obj_Ponto.ObjetoCor.CorB = 0;
-      objetosLista.Add(obj_Ponto);
-      objetoSelecionado = obj_Ponto;
-
-      //P1
-      objetoId = Utilitario.charProximo(objetoId);
-      obj_Circulo = new Circulo(objetoId, null, p1, raio1);
-      obj_Circulo.ObjetoCor.CorR = 0; obj_Circulo.ObjetoCor.CorG = 0; obj_Circulo.ObjetoCor.CorB = 0;
-      objetosLista.Add(obj_Circulo);
-      objetoSelecionado = obj_Circulo;
-
-      //P2
-      objetoId = Utilitario.charProximo(objetoId);
-      obj_Circulo2 = new Circulo(objetoId, null, p1, raio2);
-      obj_Circulo2.ObjetoCor.CorR = 0; obj_Circulo2.ObjetoCor.CorG = 0; obj_Circulo2.ObjetoCor.CorB = 0;
-      objetosLista.Add(obj_Circulo2);
-      objetoSelecionado = obj_Circulo2;
-
-      objetoId = Utilitario.charProximo(objetoId);
-      obj_Retangulo = new Retangulo(objetoId, null, new Ponto4D(Matematica.GerarPtosCirculoSimétrico(raio2) + p1.X, Matematica.GerarPtosCirculoSimétrico(raio2) + p1.Y), 
-                                    new Ponto4D(Matematica.GerarPtosCirculoSimétrico(raio2*-1) + p1.X, Matematica.GerarPtosCirculoSimétrico(raio2*-1) + p1.Y));
-      obj_Retangulo.ObjetoCor.CorR = 255; obj_Retangulo.ObjetoCor.CorG = 255; obj_Retangulo.ObjetoCor.CorB = 0;
-      objetosLista.Add(obj_Retangulo);
+      obj_SegReta = new SegReta(objetoId, null, pontoCentral, pontoFinal);
+      obj_SegReta.ObjetoCor.CorR = 0; obj_SegReta.ObjetoCor.CorG = 0; obj_SegReta.ObjetoCor.CorB = 0;
+      objetosLista.Add(obj_SegReta);
+      objetoSelecionado = obj_SegReta;
 
 #if CG_Privado
       /*objetoId = Utilitario.charProximo(objetoId);
@@ -117,33 +98,69 @@ namespace gcgcg
 #endif
       for (var i = 0; i < objetosLista.Count; i++)
         objetosLista[i].Desenhar();
-#if CG_Gizmo
       if (bBoxDesenhar && (objetoSelecionado != null))
         objetoSelecionado.BBox.Desenhar();
-#endif
-     this.SwapBuffers();
+      this.SwapBuffers();
     }
 
     protected override void OnKeyDown(OpenTK.Input.KeyboardKeyEventArgs e)
     {
+
       if (e.Key == Key.H)
         Utilitario.AjudaTeclado();
       else if (e.Key == Key.Escape)
         Exit();
       else if (e.Key == Key.E)
       {
-        Console.WriteLine("--- Objetos / Pontos: ");
-        for (var i = 0; i < objetosLista.Count; i++)
-        {
-          Console.WriteLine(objetosLista[i]);
-        }
+        camera.PanEsquerda();
+        //Console.WriteLine("--- Objetos / Pontos: ");
+       // for (var i = 0; i < objetosLista.Count; i++)
+        //{
+        //  Console.WriteLine(objetosLista[i]);
+        //}
       }
-#if CG_Gizmo
       else if (e.Key == Key.O)
-        bBoxDesenhar = !bBoxDesenhar;
-#endif
+        //bBoxDesenhar = !bBoxDesenhar;
+        camera.ZoomOut();
       else if (e.Key == Key.V)
         mouseMoverPto = !mouseMoverPto;   //TODO: falta atualizar a BBox do objeto
+      else if(e.Key == Key.I){
+        camera.ZoomIn();
+      } else if (e.Key == Key.D){
+        camera.PanDireita();
+      } else if (e.Key == Key.C){
+        camera.PanCima();
+      } else if (e.Key == Key.B){
+        camera.PanBaixo();
+      } else if (e.Key == Key.Q){
+        pontoCentral.X -= 10;
+        pontoFinal.X -= 10;
+      } else if (e.Key == Key.W){
+        pontoCentral.X += 10;
+        pontoFinal.X += 10;
+      } else if (e.Key == Key.A){
+        raio -= 10;
+        Ponto4D pontoNovo = Matematica.GerarPtosCirculo(angulo, raio);
+        pontoFinal.X -= pontoNovo.X;
+        pontoFinal.Y -= pontoNovo.Y;
+      } else if (e.Key == Key.S){
+        raio += 10;
+        Ponto4D pontoNovo = Matematica.GerarPtosCirculo(angulo, raio);
+        pontoFinal.X += pontoNovo.X;
+        pontoFinal.Y += pontoNovo.Y;
+      } else if (e.Key == Key.Z){
+        //camera.PanBaixo();
+        angulo += 10;
+        Ponto4D pontoNovo = Matematica.GerarPtosCirculo(angulo, raio);
+        pontoFinal.X += pontoNovo.X;
+        pontoFinal.Y += pontoNovo.Y;
+      } else if (e.Key == Key.X){
+        //camera.PanBaixo();
+        angulo -= 10;
+        Ponto4D pontoNovo = Matematica.GerarPtosCirculo(angulo, raio);
+        pontoFinal.X -= pontoNovo.X;
+        pontoFinal.Y -= pontoNovo.Y;
+      } 
       else
         Console.WriteLine(" __ Tecla não implementada.");
     }
@@ -157,23 +174,7 @@ namespace gcgcg
         objetoSelecionado.PontosUltimo().X = mouseX;
         objetoSelecionado.PontosUltimo().Y = mouseY;
       }
-      if (obj_Circulo.BBox.obterCentro.X > obj_Circulo.BBox.obterMenorX
-          && obj_Circulo.BBox.obterCentro.X < obj_Circulo.BBox.obterMaiorX) {
-            if (obj_Circulo.BBox.obterCentro.X > obj_Circulo.BBox.obterMenorY
-                && obj_Circulo.BBox.obterCentro.X < obj_Circulo.BBox.obterMaiorY) {
-                  
-            }
-      } else {
-
-      }
     }
-
-    protected override void OnMouseDown(MouseButtonEventArgs e)
-    {
-      
-    }
-
-    
 
 #if CG_Gizmo
     private void Sru3D()
