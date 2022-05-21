@@ -50,6 +50,7 @@ namespace gcgcg
     private Ponto4D d = new Ponto4D(100, -100);
     private Ponto pontoD;
     private Spline splineD;
+    private long n = 10;
 #if CG_Privado
     private Privado_SegReta obj_SegReta;
     private Privado_Circulo obj_Circulo;
@@ -108,7 +109,7 @@ namespace gcgcg
 
       //SegReta3p4
       objetoId = Utilitario.charProximo(objetoId);
-      splineD = new Spline(objetoId, null, this.a, this.b, this.c, this.d, 10);
+      splineD = new Spline(objetoId, null, this.a, this.b, this.c, this.d, n);
       splineD.ObjetoCor.CorR = 255; splineD.ObjetoCor.CorG = 255; splineD.ObjetoCor.CorB = 0;
       objetosLista.Add(splineD);
 
@@ -168,10 +169,6 @@ namespace gcgcg
         } else if (objetoSelecionado == pontoD) {
             this.d.X -= 2;
         }
-        objetoId = Utilitario.charProximo(objetoId);
-        splineD = new Spline(objetoId, null, this.a, this.b, this.c, this.d, 10);
-        splineD.ObjetoCor.CorR = 255; splineD.ObjetoCor.CorG = 255; splineD.ObjetoCor.CorB = 0;
-        objetosLista.Add(splineD);
       }
       else if (e.Key == Key.O)
         //bBoxDesenhar = !bBoxDesenhar;
@@ -237,9 +234,16 @@ namespace gcgcg
         this.c.Y = 100;
         this.d.X = 100;
         this.d.Y = -100;
+        splineD.quantidade = 10;
         objetoSelecionado.ObjetoCor.CorR = 0; objetoSelecionado.ObjetoCor.CorG = 0; objetoSelecionado.ObjetoCor.CorB = 0;
         objetoSelecionado = pontoD;
         objetoSelecionado.ObjetoCor.CorR = 255; objetoSelecionado.ObjetoCor.CorG = 0; objetoSelecionado.ObjetoCor.CorB = 0;
+      } else if (e.Key == Key.KeypadMinus) {
+        splineD.quantidade--;
+        Console.WriteLine("Menos");
+      } else if (e.Key == Key.KeypadAdd) {
+        splineD.quantidade++;
+        Console.WriteLine("Mais");
       }
       else
         Console.WriteLine(" __ Tecla não implementada.");
