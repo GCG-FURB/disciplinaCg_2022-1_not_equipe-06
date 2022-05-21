@@ -141,25 +141,25 @@ namespace gcgcg
       } else if (e.Key == Key.A){
         raio -= 10;
         Ponto4D pontoNovo = Matematica.GerarPtosCirculo(angulo, raio);
-        pontoFinal.X -= pontoNovo.X;
-        pontoFinal.Y -= pontoNovo.Y;
+        pontoFinal.X = pontoNovo.X + pontoCentral.X;
+        pontoFinal.Y = pontoNovo.Y + pontoCentral.Y;
       } else if (e.Key == Key.S){
         raio += 10;
         Ponto4D pontoNovo = Matematica.GerarPtosCirculo(angulo, raio);
-        pontoFinal.X += pontoNovo.X;
-        pontoFinal.Y += pontoNovo.Y;
+        pontoFinal.X = pontoNovo.X + pontoCentral.X;
+        pontoFinal.Y = pontoNovo.Y + pontoCentral.Y;
       } else if (e.Key == Key.Z){
         //camera.PanBaixo();
         angulo += 10;
         Ponto4D pontoNovo = Matematica.GerarPtosCirculo(angulo, raio);
-        pontoFinal.X += pontoNovo.X;
-        pontoFinal.Y += pontoNovo.Y;
+        pontoFinal.X = pontoNovo.X + pontoCentral.X;
+        pontoFinal.Y = pontoNovo.Y + pontoCentral.Y;
       } else if (e.Key == Key.X){
         //camera.PanBaixo();
         angulo -= 10;
         Ponto4D pontoNovo = Matematica.GerarPtosCirculo(angulo, raio);
-        pontoFinal.X -= pontoNovo.X;
-        pontoFinal.Y -= pontoNovo.Y;
+        pontoFinal.X = pontoNovo.X + pontoCentral.X;;
+        pontoFinal.Y = pontoNovo.Y + pontoCentral.Y;
       } 
       else
         Console.WriteLine(" __ Tecla não implementada.");
