@@ -14,6 +14,11 @@ namespace gcgcg
       base.PontosAdicionar(ponto);
     }
 
+    public void atualizar(Ponto4D ponto) {
+      base.pontosLista.Clear();
+      base.PontosAdicionar(ponto);
+    }
+
     protected override void DesenharObjeto()
     {
       GL.PointSize(10);

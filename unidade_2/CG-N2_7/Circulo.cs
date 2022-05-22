@@ -5,12 +5,24 @@ namespace gcgcg
 {
     internal class Circulo : ObjetoGeometria
     {
+        private long raio;
 
         public Circulo(char rotulo, Objeto pai, Ponto4D ptoCentro, long raio) : base(rotulo, pai)
         {
+            this.raio = raio;
             Ponto4D ponto = new Ponto4D();
             for (double i = ptoCentro.X; i < ptoCentro.X + 360; i += 1) {
-                ponto = Matematica.GerarPtosCirculo(i, raio);
+                ponto = Matematica.GerarPtosCirculo(i, this.raio);
+                ponto.X += ptoCentro.X;
+                ponto.Y += ptoCentro.Y;
+                base.PontosAdicionar(ponto);  
+            }
+        }
+        public void atualizar(Ponto4D ptoCentro) {
+            pontosLista.Clear();
+            Ponto4D ponto = new Ponto4D();
+            for (double i = ptoCentro.X; i < ptoCentro.X + 360; i += 1) {
+                ponto = Matematica.GerarPtosCirculo(i, this.raio);
                 ponto.X += ptoCentro.X;
                 ponto.Y += ptoCentro.Y;
                 base.PontosAdicionar(ponto);  

@@ -39,6 +39,9 @@ namespace gcgcg
     private Circulo obj_Circulo2;
     private SegReta obj_SegReta;
     private Ponto obj_Ponto;
+    private Ponto4D p1;
+    private Ponto4D p2;
+    private int raio2;
 #if CG_Privado
     private Privado_SegReta obj_SegReta;
     private Privado_Circulo obj_Circulo;
@@ -52,11 +55,11 @@ namespace gcgcg
       Console.WriteLine(" --- Ajuda / Teclas: ");
       Console.WriteLine(" [  H     ] mostra teclas usadas. ");
       
-      Ponto4D p1 = new Ponto4D(300, 300);
-      Ponto4D p2 = new Ponto4D(-100, -100);
+      p1 = new Ponto4D(300, 300);
+      p2 = new Ponto4D(300, 300);
       Ponto4D p3 = new Ponto4D(100, -100);
       int raio1 = 50;
-      int raio2 = 200;
+      raio2 = 200;
 
       objetoId = Utilitario.charProximo(objetoId);
       obj_Ponto = new Ponto(objetoId, null, p1);
@@ -73,15 +76,14 @@ namespace gcgcg
 
       //P2
       objetoId = Utilitario.charProximo(objetoId);
-      obj_Circulo2 = new Circulo(objetoId, null, p1, raio2);
+      obj_Circulo2 = new Circulo(objetoId, null, p2, raio2);
       obj_Circulo2.ObjetoCor.CorR = 0; obj_Circulo2.ObjetoCor.CorG = 0; obj_Circulo2.ObjetoCor.CorB = 0;
       objetosLista.Add(obj_Circulo2);
-      objetoSelecionado = obj_Circulo2;
 
       objetoId = Utilitario.charProximo(objetoId);
       obj_Retangulo = new Retangulo(objetoId, null, new Ponto4D(Matematica.GerarPtosCirculoSimétrico(raio2) + p1.X, Matematica.GerarPtosCirculoSimétrico(raio2) + p1.Y), 
                                     new Ponto4D(Matematica.GerarPtosCirculoSimétrico(raio2*-1) + p1.X, Matematica.GerarPtosCirculoSimétrico(raio2*-1) + p1.Y));
-      obj_Retangulo.ObjetoCor.CorR = 255; obj_Retangulo.ObjetoCor.CorG = 255; obj_Retangulo.ObjetoCor.CorB = 0;
+      obj_Retangulo.ObjetoCor.CorR = 255; obj_Retangulo.ObjetoCor.CorG = 0; obj_Retangulo.ObjetoCor.CorB = 128;
       objetosLista.Add(obj_Retangulo);
 
 #if CG_Privado
@@ -137,13 +139,16 @@ namespace gcgcg
         {
           Console.WriteLine(objetosLista[i]);
         }
+      } else if (e.Key == Key.R) {
+        obj_Retangulo.ObjetoCor.CorR = 255; obj_Retangulo.ObjetoCor.CorG = 0; obj_Retangulo.ObjetoCor.CorB = 128;
+        obj_Circulo.atualizar(p2);
+        obj_Ponto.atualizar(p2);
       }
 #if CG_Gizmo
       else if (e.Key == Key.O)
         bBoxDesenhar = !bBoxDesenhar;
 #endif
-      else if (e.Key == Key.V)
-        mouseMoverPto = !mouseMoverPto;   //TODO: falta atualizar a BBox do objeto
+         //TODO: falta atualizar a BBox do objeto
       else
         Console.WriteLine(" __ Tecla não implementada.");
     }
@@ -154,23 +159,34 @@ namespace gcgcg
       mouseX = e.Position.X; mouseY = 600 - e.Position.Y; // Inverti eixo Y
       if (mouseMoverPto && (objetoSelecionado != null))
       {
-        objetoSelecionado.PontosUltimo().X = mouseX;
-        objetoSelecionado.PontosUltimo().Y = mouseY;
-      }
-      if (obj_Circulo.BBox.obterCentro.X > obj_Circulo.BBox.obterMenorX
-          && obj_Circulo.BBox.obterCentro.X < obj_Circulo.BBox.obterMaiorX) {
-            if (obj_Circulo.BBox.obterCentro.X > obj_Circulo.BBox.obterMenorY
-                && obj_Circulo.BBox.obterCentro.X < obj_Circulo.BBox.obterMaiorY) {
-                  
-            }
-      } else {
-
+        if (obj_Circulo.BBox.obterCentro.X > obj_Retangulo.BBox.obterMenorX
+          && obj_Circulo.BBox.obterCentro.X < obj_Retangulo.BBox.obterMaiorX
+            && obj_Circulo.BBox.obterCentro.Y > obj_Retangulo.BBox.obterMenorY
+              && obj_Circulo.BBox.obterCentro.Y < obj_Retangulo.BBox.obterMaiorY) {
+                  p1.X = mouseX;
+                  p1.Y = mouseY;
+                  obj_Circulo.atualizar(p1);
+                  obj_Ponto.atualizar(p1);
+        } else {
+          obj_Retangulo.ObjetoCor.CorR = 255; obj_Retangulo.ObjetoCor.CorG = 255; obj_Retangulo.ObjetoCor.CorB = 0;
+          double d = Math.Sqrt(Math.Pow((p1.X - p2.X), 2) + Math.Pow((p1.Y - p2.Y), 2));
+          
+          if (d <= raio2) {
+            p1.X = mouseX;
+            p1.Y = mouseY;
+            obj_Circulo.atualizar(p1);
+            obj_Ponto.atualizar(p1);
+          } else {
+            obj_Retangulo.ObjetoCor.CorR = 0; obj_Retangulo.ObjetoCor.CorG = 255; obj_Retangulo.ObjetoCor.CorB = 255;
+            mouseMoverPto = !mouseMoverPto;
+          }
+        }
       }
     }
 
     protected override void OnMouseDown(MouseButtonEventArgs e)
     {
-      
+      mouseMoverPto = !mouseMoverPto;
     }
 
     
