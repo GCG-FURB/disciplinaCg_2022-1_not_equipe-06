@@ -37,6 +37,7 @@ namespace gcgcg
     private Retangulo obj_Retangulo;
     private Circulo obj_Circulo;
     private Poligno obj_Poligno;
+    private bool novoPoligno = true;
 #if CG_Privado
     private Privado_SegReta obj_SegReta;
     private Privado_Circulo obj_Circulo;
@@ -51,7 +52,7 @@ namespace gcgcg
       Console.WriteLine(" [  H     ] mostra teclas usadas. ");
 
       objetoId = Utilitario.charProximo(objetoId);
-      obj_Poligno = new Poligno(objetoId, null, new Ponto4D(-150,0), new Ponto4D(-150,0));
+      obj_Poligno = new Poligno(objetoId, null);
       obj_Poligno.ObjetoCor.CorR = 255; obj_Poligno.ObjetoCor.CorG = 255; obj_Poligno.ObjetoCor.CorB = 0;
       objetosLista.Add(obj_Poligno);
       objetoSelecionado = obj_Poligno;
@@ -121,6 +122,24 @@ namespace gcgcg
       else if (e.Key == Key.B) {
         objetoSelecionado.ObjetoCor.CorR = 0; objetoSelecionado.ObjetoCor.CorG = 0; objetoSelecionado.ObjetoCor.CorB = 255;
       }
+      else if (e.Key == Key.Space){
+        if(novoPoligno == true){
+          objetoId = Utilitario.charProximo(objetoId);
+          obj_Poligno =  new Poligno(objetoId, null);
+          obj_Poligno.PontosAdicionar(new Ponto4D(mouseX, mouseY));
+          obj_Poligno.PontosAdicionar(new Ponto4D(mouseX, mouseY));
+          obj_Poligno.ObjetoCor.CorR = 255; obj_Poligno.ObjetoCor.CorG = 255; obj_Poligno.ObjetoCor.CorB = 0;
+          objetosLista.Add(obj_Poligno);
+          objetoSelecionado = obj_Poligno;
+          Console.WriteLine(mouseX);
+          Console.WriteLine(mouseY);
+          novoPoligno = false;
+        } else {
+          objetoSelecionado.PontosRemoverUltimo();
+          objetoSelecionado.PontosAdicionar(new Ponto4D(mouseX, mouseY));
+          objetoSelecionado.PontosAdicionar(new Ponto4D(mouseX, mouseY));
+        }
+      }
       else
         Console.WriteLine(" __ Tecla não implementada.");
     }
@@ -141,7 +160,7 @@ namespace gcgcg
     {
       GL.LineWidth(1);
       GL.Begin(PrimitiveType.Lines);
-      // GL.Color3(1.0f,0.0f,0.0f);
+      //GL.Color3(1.0f,0.0f,0.0f);
       GL.Color3(Convert.ToByte(255), Convert.ToByte(0), Convert.ToByte(0));
       GL.Vertex3(0, 0, 0); GL.Vertex3(200, 0, 0);
       // GL.Color3(0.0f,1.0f,0.0f);

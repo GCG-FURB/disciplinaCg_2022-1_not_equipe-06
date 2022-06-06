@@ -6,15 +6,9 @@ namespace gcgcg
     internal class Poligno : ObjetoGeometria
     {
 
-        public Poligno(char rotulo, Objeto pai, Ponto4D ptoIni, Ponto4D ptoFim) : base(rotulo, pai)
+        public Poligno(char rotulo, Objeto pai) : base(rotulo, pai)
         {
-            base.PontosAdicionar(ptoIni);
-            base.PontosAdicionar(new Ponto4D(-100,100));
-            base.PontosAdicionar(new Ponto4D(-25,0));
-            base.PontosAdicionar(new Ponto4D(50,100));
-            base.PontosAdicionar(new Ponto4D(100,0));
-            base.PontosAdicionar(new Ponto4D(0,-100));
-            base.PontosAdicionar(ptoFim);
+
         }
         protected override void DesenharObjeto()
         {
@@ -30,7 +24,13 @@ namespace gcgcg
         //TODO: melhorar para exibir não só a lista de pontos (geometria), mas também a topologia ... poderia ser listado estilo OBJ da Wavefrom
         public override string ToString()
         {
-            return null;
+             string retorno;
+             retorno = "__ Objeto Retangulo: " + base.rotulo + "\n";
+             for (var i = 0; i < pontosLista.Count; i++)
+            {
+                retorno += "P" + i + "[" + pontosLista[i].X + "," + pontosLista[i].Y + "," + pontosLista[i].Z + "," + pontosLista[i].W + "]" + "\n";
+            }
+            return (retorno);
         }
     }
 }
