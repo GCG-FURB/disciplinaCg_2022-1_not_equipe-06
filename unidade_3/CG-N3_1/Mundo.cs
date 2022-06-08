@@ -34,10 +34,9 @@ namespace gcgcg
     private bool bBoxDesenhar = false;
     int mouseX, mouseY;   //TODO: achar método MouseDown para não ter variável Global
     private bool mouseMoverPto = false;
-    private Retangulo obj_Retangulo;
-    private Circulo obj_Circulo;
     private Poligno obj_Poligno;
     private bool novoPoligno = true;
+    private Ponto4D pontoMove;
 #if CG_Privado
     private Privado_SegReta obj_SegReta;
     private Privado_Circulo obj_Circulo;
@@ -46,16 +45,17 @@ namespace gcgcg
     protected override void OnLoad(EventArgs e)
     {
       base.OnLoad(e);
-      camera.xmin = -300; camera.xmax = 300; camera.ymin = -300; camera.ymax = 300;
+      camera.xmin = -600; camera.xmax = 600; camera.ymin = -600; camera.ymax = 600;
 
       Console.WriteLine(" --- Ajuda / Teclas: ");
       Console.WriteLine(" [  H     ] mostra teclas usadas. ");
 
-      objetoId = Utilitario.charProximo(objetoId);
+      /*objetoId = Utilitario.charProximo(objetoId);
       obj_Poligno = new Poligno(objetoId, null);
       obj_Poligno.ObjetoCor.CorR = 255; obj_Poligno.ObjetoCor.CorG = 255; obj_Poligno.ObjetoCor.CorB = 0;
       objetosLista.Add(obj_Poligno);
       objetoSelecionado = obj_Poligno;
+      */
 
 #if CG_Privado
       /*objetoId = Utilitario.charProximo(objetoId);
@@ -128,18 +128,21 @@ namespace gcgcg
           obj_Poligno =  new Poligno(objetoId, null);
           obj_Poligno.PontosAdicionar(new Ponto4D(mouseX, mouseY));
           obj_Poligno.PontosAdicionar(new Ponto4D(mouseX, mouseY));
-          obj_Poligno.ObjetoCor.CorR = 255; obj_Poligno.ObjetoCor.CorG = 255; obj_Poligno.ObjetoCor.CorB = 0;
+          obj_Poligno.ObjetoCor.CorR = 255; obj_Poligno.ObjetoCor.CorG = 0; obj_Poligno.ObjetoCor.CorB = 0;
           objetosLista.Add(obj_Poligno);
           objetoSelecionado = obj_Poligno;
+          novoPoligno = false;
+          Console.WriteLine(obj_Poligno.ToString());
+          mouseMoverPto = true;
+        } else {
           Console.WriteLine(mouseX);
           Console.WriteLine(mouseY);
-          novoPoligno = false;
-        } else {
           objetoSelecionado.PontosRemoverUltimo();
           objetoSelecionado.PontosAdicionar(new Ponto4D(mouseX, mouseY));
           objetoSelecionado.PontosAdicionar(new Ponto4D(mouseX, mouseY));
         }
       }
+
       else
         Console.WriteLine(" __ Tecla não implementada.");
     }
@@ -147,7 +150,9 @@ namespace gcgcg
     //TODO: não está considerando o NDC
     protected override void OnMouseMove(MouseMoveEventArgs e)
     {
-      mouseX = e.Position.X; mouseY = 600 - e.Position.Y; // Inverti eixo Y
+      mouseX = e.Position.X; mouseY = 600-e.Position.Y; // Inverti eixo Y
+      Console.WriteLine("X: " + e.Position.X);
+      Console.WriteLine("Y: " + mouseY);
       if (mouseMoverPto && (objetoSelecionado != null))
       {
         objetoSelecionado.PontosUltimo().X = mouseX;
