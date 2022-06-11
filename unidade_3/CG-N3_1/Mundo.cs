@@ -34,6 +34,7 @@ namespace gcgcg
     private bool bBoxDesenhar = false;
     int mouseX, mouseY;   //TODO: achar método MouseDown para não ter variável Global
     private bool mouseMoverPto = false;
+    private bool mouseRemoverPto = true;
     private Poligno obj_Poligno;
     private bool novoPoligno = true;
     private Ponto4D pontoMove;
@@ -126,21 +127,39 @@ namespace gcgcg
         if(novoPoligno == true){
           objetoId = Utilitario.charProximo(objetoId);
           obj_Poligno =  new Poligno(objetoId, null);
+          obj_Poligno.PrimitivaTipo = PrimitiveType.LineLoop;
           obj_Poligno.PontosAdicionar(new Ponto4D(mouseX, mouseY));
           obj_Poligno.PontosAdicionar(new Ponto4D(mouseX, mouseY));
-          obj_Poligno.ObjetoCor.CorR = 255; obj_Poligno.ObjetoCor.CorG = 0; obj_Poligno.ObjetoCor.CorB = 0;
+          obj_Poligno.ObjetoCor.CorR = 255; obj_Poligno.ObjetoCor.CorG = 255; obj_Poligno.ObjetoCor.CorB = 255;
           objetosLista.Add(obj_Poligno);
           objetoSelecionado = obj_Poligno;
           novoPoligno = false;
-          Console.WriteLine(obj_Poligno.ToString());
           mouseMoverPto = true;
         } else {
-          Console.WriteLine(mouseX);
-          Console.WriteLine(mouseY);
           objetoSelecionado.PontosRemoverUltimo();
           objetoSelecionado.PontosAdicionar(new Ponto4D(mouseX, mouseY));
           objetoSelecionado.PontosAdicionar(new Ponto4D(mouseX, mouseY));
         }
+      } else if (e.Key == Key.Enter) {
+        mouseMoverPto = false;
+        novoPoligno = true;
+        mouseRemoverPto = true;
+        objetoSelecionado.PontosRemoverUltimo();
+      } else if (e.Key == Key.S){
+        if(objetoSelecionado.PrimitivaTipo == PrimitiveType.LineLoop){
+          objetoSelecionado.PrimitivaTipo = PrimitiveType.LineStrip;
+        } else {
+          objetoSelecionado.PrimitivaTipo = PrimitiveType.LineLoop;
+        }
+      } else if (e.Key == Key.C){
+          objetosLista.Remove(objetoSelecionado);
+      } else if (e.Key == Key.D){
+          objetoSelecionado.PontosRemover(obj_Poligno.VerticeMaisProximo(objetoSelecionado.Pontos() , new Ponto4D(mouseX, mouseY)));
+      } else if(e.Key == Key.V){
+          objetoSelecionado.PontosRemover(obj_Poligno.VerticeMaisProximo(objetoSelecionado.Pontos() , new Ponto4D(mouseX, mouseY)));
+          mouseMoverPto = true;
+          novoPoligno = false;     
+          mouseRemoverPto = true;     
       }
 
       else
@@ -150,9 +169,7 @@ namespace gcgcg
     //TODO: não está considerando o NDC
     protected override void OnMouseMove(MouseMoveEventArgs e)
     {
-      mouseX = e.Position.X; mouseY = 600-e.Position.Y; // Inverti eixo Y
-      Console.WriteLine("X: " + e.Position.X);
-      Console.WriteLine("Y: " + mouseY);
+      mouseX = e.Position.X; mouseY = 300-e.Position.Y; // Inverti eixo Y
       if (mouseMoverPto && (objetoSelecionado != null))
       {
         objetoSelecionado.PontosUltimo().X = mouseX;
@@ -182,6 +199,8 @@ namespace gcgcg
   {
     static void Main(string[] args)
     {
+      ToolkitOptions.Default.EnableHighResolution = false;
+
       Mundo window = Mundo.GetInstance(600, 600);
       window.Title = "CG_N2";
       window.Run(1.0 / 60.0);

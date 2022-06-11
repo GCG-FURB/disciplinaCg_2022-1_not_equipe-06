@@ -13,6 +13,7 @@ namespace CG_Biblioteca
     /// <param name="angulo"></param>
     /// <param name="raio"></param>
     /// <returns></returns>
+
     public static Ponto4D GerarPtosCirculo(double angulo, double raio)
     {
       Ponto4D pto = new Ponto4D();
@@ -27,5 +28,9 @@ namespace CG_Biblioteca
       return (raio * Math.Cos(Math.PI * 45 / 180.0));
     }
     
+    public static double DistanciaEuclidiana(Ponto4D pontoLista, Ponto4D pontoMouse){
+      double distancia = Math.Sqrt((Math.Pow(pontoLista.X - pontoMouse.X, 2) + Math.Pow(pontoLista.Y - pontoMouse.Y, 2)));
+      return distancia;
+    }
   }
 }

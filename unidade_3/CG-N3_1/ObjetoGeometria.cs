@@ -28,6 +28,9 @@ namespace gcgcg
       base.BBox.ProcessarCentro();
     }
 
+    public void PontosRemover(int posicao){
+      pontosLista.RemoveAt(posicao);
+    }
     public void PontosRemoverUltimo()
     {
       pontosLista.RemoveAt(pontosLista.Count - 1);
@@ -46,6 +49,10 @@ namespace gcgcg
     public void PontosAlterar(Ponto4D pto, int posicao)
     {
       pontosLista[posicao] = pto;
+    }
+
+    public List<Ponto4D> Pontos(){
+      return pontosLista;
     }
 
     public override string ToString()

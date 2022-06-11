@@ -1,7 +1,7 @@
-TECLA E      = N3-Exe04: listas polígonos e vértices.
-TECLA O      = N3-Exe08: exibe bBox do polígono selecionado.
-TECLA Enter  = N3-Exe09: termina adição e mover de pontos, desseleciona polígono.
-TECLA Espaço = N3-Exe06: adiciona vértice ao polígono.
+OK - TECLA E      = N3-Exe04: listas polígonos e vértices.
+OK - TECLA O      = N3-Exe08: exibe bBox do polígono selecionado.
+OK - TECLA Enter  = N3-Exe09: termina adição e mover de pontos, desseleciona polígono.
+OK - TECLA Espaço = N3-Exe06: adiciona vértice ao polígono.
 TECLA A      = N3-Exe09: seleção do Polígono.
 TECLA Left   = N3-Exe10: move o polígono selecionado para eixo X positivo.
 TECLA Right  = N3-Exe10: move o polígono selecionado para eixo X negativo.
@@ -11,19 +11,19 @@ TECLA Home   = N3-Exe11: reduz o polígono selecionado em relação ao centro da
 TECLA End    = N3-Exe11: amplia o polígono selecionado em relação ao centro da bBox. 
 TECLA 3      = N3-Exe12: rotação anti-horária do polígono selecionado em relação ao centro da bBox.
 TECLA 4      = N3-Exe12: rotação horária do polígono selecionado em relação ao centro da bBox.
-TECLA R      = N3-Exe08: atribui a cor vermelha ao polígono selecionado.
-TECLA G      = N3-Exe08: atribui a cor verde ao polígono selecionado.
-TECLA B      = N3-Exe08: atribui a cor azul ao polígono selecionado.
-TECLA S      = N3-Exe07: alterna entre aberto e fechado o polígono selecionado.
-TECLA D      = N3-Exe05: remove o vértice do polígono selecionado que estiver mais perto do mouse.
+OK - TECLA R      = N3-Exe08: atribui a cor vermelha ao polígono selecionado.
+OK - TECLA G      = N3-Exe08: atribui a cor verde ao polígono selecionado.
+OK - TECLA B      = N3-Exe08: atribui a cor azul ao polígono selecionado.
+OK - TECLA S      = N3-Exe07: alterna entre aberto e fechado o polígono selecionado.
+OK/NOK TECLA D      = N3-Exe05: remove o vértice do polígono selecionado que estiver mais perto do mouse.
 TECLA V      = N3-Exe05: move o vértice do polígono selecionado que estiver mais perto do mouse.
-TECLA C      = N3-Exe04: remove o polígono selecionado.
+OK - TECLA C      = N3-Exe04: remove o polígono selecionado.
 
 ## 1. Especificação
 
 Especifique as classes, métodos e atributos usando Diagrama de Classes.  
 
-## 2. Estrutura de dados: polígono
+## 2. Estrutura de dados: polígono - OK
 
 Insira e remova polígonos da cena gráfica.  
 
@@ -33,15 +33,15 @@ Ao clicar na tela utilizando o mouse selecione o vértice mais próximo do polí
 
 Atenção: no caso do mover o vértice o valores da coordenada é alterada e não os valores da matriz de transformação.  
 
-## 4. Visualização: rastro
+## 4. Visualização: rastro - OK
 
 Exiba o “rasto” ao desenhar os segmentos do polígono.  
 
-## 5. Interação: desenho
+## 5. Interação: desenho - OK
 
 Utilize o mouse para clicar na tela e desenhar polígonos (aberto ou fechado).  
 
-## 6. Interação: cores
+## 6. Interação: cores - OK
 
 Utilize o teclado (teclas R=vermelho,G=verde,B=azul) para trocar as cores dos polígonos selecionado.  
 
