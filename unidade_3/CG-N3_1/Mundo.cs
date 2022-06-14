@@ -46,7 +46,7 @@ namespace gcgcg
     protected override void OnLoad(EventArgs e)
     {
       base.OnLoad(e);
-      camera.xmin = -600; camera.xmax = 600; camera.ymin = -600; camera.ymax = 600;
+      camera.xmin = 0; camera.xmax = 600; camera.ymin = 0; camera.ymax = 600;
 
       Console.WriteLine(" --- Ajuda / Teclas: ");
       Console.WriteLine(" [  H     ] mostra teclas usadas. ");
@@ -157,6 +157,7 @@ namespace gcgcg
           objetoSelecionado.PontosRemover(obj_Poligno.VerticeMaisProximo(objetoSelecionado.Pontos() , new Ponto4D(mouseX, mouseY)));
       } else if(e.Key == Key.V){
           objetoSelecionado.PontosRemover(obj_Poligno.VerticeMaisProximo(objetoSelecionado.Pontos() , new Ponto4D(mouseX, mouseY)));
+          objetoSelecionado.PontosAdicionar(new Ponto4D(mouseX, mouseY));
           mouseMoverPto = true;
           novoPoligno = false;     
           mouseRemoverPto = true;     
@@ -169,7 +170,7 @@ namespace gcgcg
     //TODO: não está considerando o NDC
     protected override void OnMouseMove(MouseMoveEventArgs e)
     {
-      mouseX = e.Position.X; mouseY = 300-e.Position.Y; // Inverti eixo Y
+      mouseX = e.Position.X; mouseY = 600-e.Position.Y; // Inverti eixo Y
       if (mouseMoverPto && (objetoSelecionado != null))
       {
         objetoSelecionado.PontosUltimo().X = mouseX;

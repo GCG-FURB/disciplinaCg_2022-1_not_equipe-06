@@ -44,10 +44,11 @@ namespace gcgcg
             for (int i = 0; i < pontosLista.Count; i++){
                 d = DistanciaEuclidiana(pontosLista[i], pontoMouse);
                 if(d < menorDistancia){
-                menorDistancia = d;
-                posicaoMenorDistancia = i;
+                    menorDistancia = d;
+                    posicaoMenorDistancia = i;
                 }
             }
+            Console.WriteLine(posicaoMenorDistancia);
             return posicaoMenorDistancia;
         }
     }
