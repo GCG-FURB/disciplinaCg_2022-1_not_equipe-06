@@ -154,13 +154,12 @@ namespace gcgcg
       } else if (e.Key == Key.C){
           objetosLista.Remove(objetoSelecionado);
       } else if (e.Key == Key.D){
-          objetoSelecionado.PontosRemover(obj_Poligno.VerticeMaisProximo(objetoSelecionado.Pontos() , new Ponto4D(mouseX, mouseY)));
+          objetoSelecionado.VerticeMaisProximo(new Ponto4D(mouseX, mouseY), true);
       } else if(e.Key == Key.V){
-          objetoSelecionado.PontosRemover(obj_Poligno.VerticeMaisProximo(objetoSelecionado.Pontos() , new Ponto4D(mouseX, mouseY)));
-          objetoSelecionado.PontosAdicionar(new Ponto4D(mouseX, mouseY));
+          objetoSelecionado.VerticeMaisProximo(new Ponto4D(mouseX, mouseY), false);
           mouseMoverPto = true;
           novoPoligno = false;     
-          mouseRemoverPto = true;     
+          mouseRemoverPto = true;    
       }
 
       else

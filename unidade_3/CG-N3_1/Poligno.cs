@@ -32,24 +32,5 @@ namespace gcgcg
             }
             return (retorno);
         }
-         public static double DistanciaEuclidiana(Ponto4D pontoLista, Ponto4D pontoMouse){
-            double distancia = Math.Sqrt((Math.Pow(pontoLista.X - pontoMouse.X, 2) + Math.Pow(pontoLista.Y - pontoMouse.Y, 2)));
-            return distancia;
-        }
-
-        public int VerticeMaisProximo(List<Ponto4D> pontosLista, Ponto4D pontoMouse){
-            double menorDistancia = 600;
-            double d = 0;
-            int posicaoMenorDistancia = 0;
-            for (int i = 0; i < pontosLista.Count; i++){
-                d = DistanciaEuclidiana(pontosLista[i], pontoMouse);
-                if(d < menorDistancia){
-                    menorDistancia = d;
-                    posicaoMenorDistancia = i;
-                }
-            }
-            Console.WriteLine(posicaoMenorDistancia);
-            return posicaoMenorDistancia;
-        }
     }
 }

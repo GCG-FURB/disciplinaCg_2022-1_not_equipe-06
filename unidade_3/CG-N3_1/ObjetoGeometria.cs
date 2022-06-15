@@ -28,9 +28,6 @@ namespace gcgcg
       base.BBox.ProcessarCentro();
     }
 
-    public void PontosRemover(int posicao){
-      pontosLista.RemoveAt(posicao);
-    }
     public void PontosRemoverUltimo()
     {
       pontosLista.RemoveAt(pontosLista.Count - 1);
@@ -39,6 +36,10 @@ namespace gcgcg
     protected void PontosRemoverTodos()
     {
       pontosLista.Clear();
+    }
+
+    protected void PontosRemoverAt(int posicao){
+      pontosLista.RemoveAt(posicao);
     }
 
     public Ponto4D PontosUltimo()
@@ -51,9 +52,26 @@ namespace gcgcg
       pontosLista[posicao] = pto;
     }
 
-    public List<Ponto4D> Pontos(){
-      return pontosLista;
-    }
+    public void VerticeMaisProximo(Ponto4D pontoMouse, bool isRemove){
+            double menorDistancia = Matematica.DistanciaEuclidiana(pontosLista[0], pontoMouse);
+            double d = 0;
+            int posicaoMenorDistancia = 0;
+            for (int i = 1; i < pontosLista.Count; i++){
+                d = Matematica.DistanciaEuclidiana(pontosLista[i], pontoMouse);
+                if(d < menorDistancia){
+                    menorDistancia = d;
+                    posicaoMenorDistancia = i;
+                }
+            }
+            
+            if(isRemove == true){
+              PontosRemoverAt(posicaoMenorDistancia);
+            } else {
+              PontosRemoverAt(posicaoMenorDistancia);
+              PontosAdicionar(pontoMouse);
+            }
+    
+        }
 
     public override string ToString()
     {
