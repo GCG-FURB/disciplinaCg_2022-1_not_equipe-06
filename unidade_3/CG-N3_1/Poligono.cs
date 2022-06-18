@@ -3,10 +3,10 @@ using CG_Biblioteca;
 
 namespace gcgcg
 {
-    internal class Poligno : ObjetoGeometria
+    internal class Poligono : ObjetoGeometria
     {
 
-        public Poligno(char rotulo, Objeto pai) : base(rotulo, pai)
+        public Poligono(char rotulo, Objeto pai) : base(rotulo, pai)
         {
 
         }

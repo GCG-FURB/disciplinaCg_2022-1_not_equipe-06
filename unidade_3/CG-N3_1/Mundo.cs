@@ -35,7 +35,7 @@ namespace gcgcg
     int mouseX, mouseY;   //TODO: achar método MouseDown para não ter variável Global
     private bool mouseMoverPto = false;
     private bool mouseAlterarPto = false;
-    private Poligno obj_Poligno;
+    private Poligono obj_Poligno;
     private bool novoPoligno = true;
 #if CG_Privado
     private Privado_SegReta obj_SegReta;
@@ -131,7 +131,7 @@ namespace gcgcg
       else if (e.Key == Key.Space){
         if(novoPoligno == true){
           objetoId = Utilitario.charProximo(objetoId);
-          obj_Poligno =  new Poligno(objetoId, null);
+          obj_Poligno =  new Poligono(objetoId, null);
           obj_Poligno.PrimitivaTipo = PrimitiveType.LineLoop;
           obj_Poligno.PontosAdicionar(new Ponto4D(mouseX, mouseY));
           obj_Poligno.PontosAdicionar(new Ponto4D(mouseX, mouseY));
