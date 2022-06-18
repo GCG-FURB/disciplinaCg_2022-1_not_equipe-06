@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace CG_Biblioteca
 {
@@ -32,14 +33,5 @@ namespace CG_Biblioteca
       double distancia = Math.Sqrt((Math.Pow(pontoLista.X - pontoMouse.X, 2) + Math.Pow(pontoLista.Y - pontoMouse.Y, 2)));
       return distancia;
     }
-
-    public static ScanlineIntesec(double y, double y1, double y2){
-      return (y - y1) / (y2-y1);
-    }
-
-    public static ScanlineCalcularXi(double x1, double x2, double t){
-      return (x1 + (x2-x1) * t);
-    }
-
   }
 }

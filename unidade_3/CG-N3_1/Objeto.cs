@@ -61,6 +61,10 @@ namespace gcgcg
       this.objetosLista.Remove(filho);
     }
 
+    public List<Objeto> Filhos(){
+      return this.objetosLista;
+    }
+
     public void Rotacao(double angulo)
     {
       RotacaoEixo(angulo);
@@ -135,6 +139,13 @@ namespace gcgcg
       matrizGlobal = matrizTmpTranslacaoInversa.MultiplicarMatriz(matrizGlobal);
 
       matriz = matriz.MultiplicarMatriz(matrizGlobal);
+    }
+
+    public bool VerificaEstaDentroBBox(Ponto4D pto){
+      if(pto.X <= BBox.obterMaiorX && pto.X >= BBox.obterMenorX && pto.Y <= BBox.obterMaiorY && pto.Y >= BBox.obterMenorY){
+        return true;
+      }            
+      return false;                                                                                            
     }
 
   }

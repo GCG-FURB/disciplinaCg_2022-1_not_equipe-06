@@ -12,7 +12,7 @@ OK - TECLA E      = N3-Exe04: listas polígonos e vértices.
 OK - TECLA O      = N3-Exe08: exibe bBox do polígono selecionado.
 OK - TECLA Enter  = N3-Exe09: termina adição e mover de pontos, desseleciona polígono.
 OK - TECLA Espaço = N3-Exe06: adiciona vértice ao polígono.
-TECLA A      = N3-Exe09: seleção do Polígono.
+OK - TECLA A      = N3-Exe09: seleção do Polígono.
 OK - TECLA Left   = N3-Exe10: move o polígono selecionado para eixo X positivo.
 OK - TECLA Right  = N3-Exe10: move o polígono selecionado para eixo X negativo.
 OK - TECLA Up     = N3-Exe10: move o polígono selecionado para eixo Y positivo.
@@ -55,7 +55,7 @@ Utilize o mouse para clicar na tela e desenhar polígonos (aberto ou fechado).
 
 Utilize o teclado (teclas R=vermelho,G=verde,B=azul) para trocar as cores dos polígonos selecionado.  
 
-## 7. Interação: BBox
+## 7. Interação: BBox - OK
 
 Utilizando o mouse selecione um polígono (convexo ou côncavo) usando detecção hierárquica filtrando primeiro pela BBox e, se for interno a BBox então testar usando Scan Line (exibir a BBox do polígono selecionado usando a cor amarela).  
 
@@ -77,13 +77,13 @@ Utilizando o mouse gire o polígono selecionado em relação ao centro da sua BB
 
 Atenção: usar matriz de transformação e não alterar os valores dos vértices dos polígonos.  
 
-## 11. Grafo de cena: selecionar
+## 11. Grafo de cena: selecionar - OK
 
 Permita adicionar polígonos “filhos” num polígono selecionado utilizando a estrutura do grafo de cena.  
 
 Atenção: usar matriz de transformação global para acumular transformações de acordo com o grafo de cena.  
 
-## 12. Grafo de cena: transformação
+## 12. Grafo de cena: transformação - OK
 
 Considere a transformação global ao transformar (translação/escala/rotação) um polígono “pai”.  
 

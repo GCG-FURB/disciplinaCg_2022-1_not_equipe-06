@@ -107,17 +107,25 @@ namespace gcgcg
         for (var i = 0; i < objetosLista.Count; i++)
         {
           Console.WriteLine(objetosLista[i]);
+          List<Objeto> filhos = objetosLista[i].Filhos();
+          if(filhos != null){
+            foreach (ObjetoGeometria objetoFilho in filhos){
+              if(objetoFilho == objetoSelecionado){
+                Console.WriteLine(objetoFilho);
+              }
+            }
+          }
         }
       }
       else if (e.Key == Key.O)
         bBoxDesenhar = !bBoxDesenhar;
-      else if (e.Key == Key.R) {
+      else if (e.Key == Key.R && objetoSelecionado != null) {
         objetoSelecionado.ObjetoCor.CorR = 255; objetoSelecionado.ObjetoCor.CorG = 0; objetoSelecionado.ObjetoCor.CorB = 0;
       }
-      else if (e.Key == Key.G) {
+      else if (e.Key == Key.G && objetoSelecionado != null) {
         objetoSelecionado.ObjetoCor.CorR = 0; objetoSelecionado.ObjetoCor.CorG = 255; objetoSelecionado.ObjetoCor.CorB = 0;
       }
-      else if (e.Key == Key.B) {
+      else if (e.Key == Key.B && objetoSelecionado != null) {
         objetoSelecionado.ObjetoCor.CorR = 0; objetoSelecionado.ObjetoCor.CorG = 0; objetoSelecionado.ObjetoCor.CorB = 255;
       }
       else if (e.Key == Key.Space){
@@ -149,55 +157,70 @@ namespace gcgcg
         }
         mouseMoverPto = false;
         novoPoligno = true;
-      } else if (e.Key == Key.S){
+      } else if (e.Key == Key.S && objetoSelecionado != null){
         if(objetoSelecionado.PrimitivaTipo == PrimitiveType.LineLoop){
           objetoSelecionado.PrimitivaTipo = PrimitiveType.LineStrip;
         } else {
           objetoSelecionado.PrimitivaTipo = PrimitiveType.LineLoop;
         }
-      } else if (e.Key == Key.C){
-          objetosLista.Remove(objetoSelecionado);
-      } else if (e.Key == Key.D){
+      } else if (e.Key == Key.C && objetoSelecionado != null){
+          for (var i = 0; i < objetosLista.Count; i++)
+        {
+          if(objetosLista[i] == objetoSelecionado){
+            objetosLista.Remove(objetoSelecionado);
+          } else {
+            List<Objeto> filhos = objetosLista[i].Filhos();
+            if(filhos != null){
+              foreach (ObjetoGeometria objetoFilho in filhos){
+                if(objetoFilho == objetoSelecionado){
+                  objetosLista[i].FilhoRemover(objetoFilho);
+                }
+              }
+            }
+          }
+        }
+          
+      } else if (e.Key == Key.D && objetoSelecionado != null){
           objetoSelecionado.VerticeMaisProximo(new Ponto4D(mouseX, mouseY), true);
-      } else if(e.Key == Key.V){
+      } else if(e.Key == Key.V && objetoSelecionado != null){
           objetoSelecionado.VerticeMaisProximo(new Ponto4D(mouseX, mouseY), false);
           mouseAlterarPto = true;
           novoPoligno = false;     
-      } else if (e.Key == Key.I){
+      } else if (e.Key == Key.I && objetoSelecionado != null){
         objetoSelecionado.AtribuirIdentidade();
-      } else if (e.Key == Key.M){
+      } else if (e.Key == Key.M && objetoSelecionado != null){
         objetoSelecionado.MatrizToString();
-      } else if (e.Key == Key.Left){
+      } else if (e.Key == Key.Left && objetoSelecionado != null){
         objetoSelecionado.TranslacaoXYZ(-10, 0, 0);
-      } else if (e.Key == Key.Right){
+      } else if (e.Key == Key.Right && objetoSelecionado != null){
         objetoSelecionado.TranslacaoXYZ(10, 0, 0);
-      } else if (e.Key == Key.Up){
+      } else if (e.Key == Key.Up && objetoSelecionado != null){
         objetoSelecionado.TranslacaoXYZ(0, 10, 0);
-      } else if (e.Key == Key.Down){
+      } else if (e.Key == Key.Down && objetoSelecionado != null){
         objetoSelecionado.TranslacaoXYZ(0, -10, 0);
-      } else if (e.Key == Key.PageUp){
+      } else if (e.Key == Key.PageUp && objetoSelecionado != null){
         objetoSelecionado.EscalaXYZ(2, 2, 2);
-      } else if (e.Key == Key.PageDown){
+      } else if (e.Key == Key.PageDown && objetoSelecionado != null){
         objetoSelecionado.EscalaXYZ(0.5, 0.5, 0.5);
-      } else if (e.Key == Key.Home){
+      } else if (e.Key == Key.Home && objetoSelecionado != null){
         objetoSelecionado.EscalaZBBox(0.5, 0.5, 0.5);
-      } else if (e.Key == Key.End){
+      } else if (e.Key == Key.End && objetoSelecionado != null){
         objetoSelecionado.EscalaZBBox(2, 2, 2);
-      } else if (e.Key == Key.Number1){
+      } else if (e.Key == Key.Number1 && objetoSelecionado != null){
         objetoSelecionado.Rotacao(10);
-      } else if (e.Key == Key.Number2){
+      } else if (e.Key == Key.Number2 && objetoSelecionado != null){
         objetoSelecionado.Rotacao(-10);
-      } else if (e.Key == Key.Number3){
+      } else if (e.Key == Key.Number3 && objetoSelecionado != null){
         objetoSelecionado.RotacaoZBBox(10);
-      } else if (e.Key == Key.Number4){
+      } else if (e.Key == Key.Number4 && objetoSelecionado != null){
         objetoSelecionado.RotacaoZBBox(-10);
       } else if (e.Key == Key.Number5){
         objetoSelecionado = null;
-      } else if (e.Key == Key.X){
+      } else if (e.Key == Key.X && objetoSelecionado != null){
         objetoSelecionado.eixoRotacao = 'x';
-      } else if (e.Key == Key.Y){
+      } else if (e.Key == Key.Y && objetoSelecionado != null){
         objetoSelecionado.eixoRotacao = 'y';
-      } else if (e.Key == Key.Z){
+      } else if (e.Key == Key.Z&& objetoSelecionado != null){
         objetoSelecionado.eixoRotacao = 'z';
       } else if (e.Key == Key.P){
         Console.WriteLine("--- Objeto Selecionado: ");
@@ -205,15 +228,39 @@ namespace gcgcg
         {
           if(objetosLista[i] == objetoSelecionado){
             Console.WriteLine(objetosLista[i]);
+          } else {
+            List<Objeto> filhos = objetosLista[i].Filhos();
+            if(filhos != null){
+              foreach (ObjetoGeometria objetoFilho in filhos){
+                if(objetoFilho == objetoSelecionado){
+                  Console.WriteLine(objetoFilho);
+                }
+              }
+            }
           }
         }
       } else if (e.Key == Key.A){
-        for (var i = 0; i < objetosLista.Count; i++)
-        {
-          if(mouseX <= objetosLista[i].BBox.obterMaiorX && mouseX >= objetosLista[i].BBox.obterMenorX
-                                                        && mouseY <= objetosLista[i].BBox.obterMaiorY
-                                                        && mouseY >= objetosLista[i].BBox.obterMenorY){
-              Console.WriteLine("Seleciona por BBOX");
+        Ponto4D pontoMouse = new Ponto4D(mouseX, mouseY);
+        bool dentroFilho = false;
+        bool dentroPai = false; 
+        foreach (ObjetoGeometria objeto in this.objetosLista){
+          List<Objeto> filhos = objeto.Filhos();
+          if(filhos != null){
+            foreach (ObjetoGeometria objetoFilho in filhos){
+              objetoFilho.VerificaEstaDentroBBox(pontoMouse);
+              dentroFilho = objetoFilho.ScanLine(new Ponto4D(mouseX, mouseY));
+              if(dentroFilho == true){
+                objetoSelecionado = objetoFilho;
+              }
+            }
+          }
+          objeto.VerificaEstaDentroBBox(pontoMouse);
+          dentroPai = objeto.ScanLine(new Ponto4D(mouseX, mouseY));
+          if(dentroPai == true){
+            objetoSelecionado = objeto;
+          }
+          if(dentroPai == false && dentroFilho == false){
+            objetoSelecionado = null;
           }
         }
       }
