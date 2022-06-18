@@ -34,10 +34,9 @@ namespace gcgcg
     private bool bBoxDesenhar = false;
     int mouseX, mouseY;   //TODO: achar método MouseDown para não ter variável Global
     private bool mouseMoverPto = false;
-    private bool mouseRemoverPto = true;
+    private bool mouseAlterarPto = false;
     private Poligno obj_Poligno;
     private bool novoPoligno = true;
-    private Ponto4D pontoMove;
 #if CG_Privado
     private Privado_SegReta obj_SegReta;
     private Privado_Circulo obj_Circulo;
@@ -112,8 +111,6 @@ namespace gcgcg
       }
       else if (e.Key == Key.O)
         bBoxDesenhar = !bBoxDesenhar;
-      else if (e.Key == Key.V)
-        mouseMoverPto = !mouseMoverPto;   //TODO: falta atualizar a BBox do objeto
       else if (e.Key == Key.R) {
         objetoSelecionado.ObjetoCor.CorR = 255; objetoSelecionado.ObjetoCor.CorG = 0; objetoSelecionado.ObjetoCor.CorB = 0;
       }
@@ -131,7 +128,11 @@ namespace gcgcg
           obj_Poligno.PontosAdicionar(new Ponto4D(mouseX, mouseY));
           obj_Poligno.PontosAdicionar(new Ponto4D(mouseX, mouseY));
           obj_Poligno.ObjetoCor.CorR = 255; obj_Poligno.ObjetoCor.CorG = 255; obj_Poligno.ObjetoCor.CorB = 255;
-          objetosLista.Add(obj_Poligno);
+          if(objetoSelecionado != null){
+            objetoSelecionado.FilhoAdicionar(obj_Poligno);
+          }else{
+            objetosLista.Add(obj_Poligno);
+          }
           objetoSelecionado = obj_Poligno;
           novoPoligno = false;
           mouseMoverPto = true;
@@ -141,10 +142,13 @@ namespace gcgcg
           objetoSelecionado.PontosAdicionar(new Ponto4D(mouseX, mouseY));
         }
       } else if (e.Key == Key.Enter) {
+        if(mouseAlterarPto == false){
+          objetoSelecionado.PontosRemoverUltimo();
+        } else {
+          mouseAlterarPto = false;
+        }
         mouseMoverPto = false;
         novoPoligno = true;
-        mouseRemoverPto = true;
-        objetoSelecionado.PontosRemoverUltimo();
       } else if (e.Key == Key.S){
         if(objetoSelecionado.PrimitivaTipo == PrimitiveType.LineLoop){
           objetoSelecionado.PrimitivaTipo = PrimitiveType.LineStrip;
@@ -157,9 +161,61 @@ namespace gcgcg
           objetoSelecionado.VerticeMaisProximo(new Ponto4D(mouseX, mouseY), true);
       } else if(e.Key == Key.V){
           objetoSelecionado.VerticeMaisProximo(new Ponto4D(mouseX, mouseY), false);
-          mouseMoverPto = true;
+          mouseAlterarPto = true;
           novoPoligno = false;     
-          mouseRemoverPto = true;    
+      } else if (e.Key == Key.I){
+        objetoSelecionado.AtribuirIdentidade();
+      } else if (e.Key == Key.M){
+        objetoSelecionado.MatrizToString();
+      } else if (e.Key == Key.Left){
+        objetoSelecionado.TranslacaoXYZ(-10, 0, 0);
+      } else if (e.Key == Key.Right){
+        objetoSelecionado.TranslacaoXYZ(10, 0, 0);
+      } else if (e.Key == Key.Up){
+        objetoSelecionado.TranslacaoXYZ(0, 10, 0);
+      } else if (e.Key == Key.Down){
+        objetoSelecionado.TranslacaoXYZ(0, -10, 0);
+      } else if (e.Key == Key.PageUp){
+        objetoSelecionado.EscalaXYZ(2, 2, 2);
+      } else if (e.Key == Key.PageDown){
+        objetoSelecionado.EscalaXYZ(0.5, 0.5, 0.5);
+      } else if (e.Key == Key.Home){
+        objetoSelecionado.EscalaZBBox(0.5, 0.5, 0.5);
+      } else if (e.Key == Key.End){
+        objetoSelecionado.EscalaZBBox(2, 2, 2);
+      } else if (e.Key == Key.Number1){
+        objetoSelecionado.Rotacao(10);
+      } else if (e.Key == Key.Number2){
+        objetoSelecionado.Rotacao(-10);
+      } else if (e.Key == Key.Number3){
+        objetoSelecionado.RotacaoZBBox(10);
+      } else if (e.Key == Key.Number4){
+        objetoSelecionado.RotacaoZBBox(-10);
+      } else if (e.Key == Key.Number5){
+        objetoSelecionado = null;
+      } else if (e.Key == Key.X){
+        objetoSelecionado.eixoRotacao = 'x';
+      } else if (e.Key == Key.Y){
+        objetoSelecionado.eixoRotacao = 'y';
+      } else if (e.Key == Key.Z){
+        objetoSelecionado.eixoRotacao = 'z';
+      } else if (e.Key == Key.P){
+        Console.WriteLine("--- Objeto Selecionado: ");
+        for (var i = 0; i < objetosLista.Count; i++)
+        {
+          if(objetosLista[i] == objetoSelecionado){
+            Console.WriteLine(objetosLista[i]);
+          }
+        }
+      } else if (e.Key == Key.A){
+        for (var i = 0; i < objetosLista.Count; i++)
+        {
+          if(mouseX <= objetosLista[i].BBox.obterMaiorX && mouseX >= objetosLista[i].BBox.obterMenorX
+                                                        && mouseY <= objetosLista[i].BBox.obterMaiorY
+                                                        && mouseY >= objetosLista[i].BBox.obterMenorY){
+              Console.WriteLine("Seleciona por BBOX");
+          }
+        }
       }
 
       else
@@ -174,6 +230,10 @@ namespace gcgcg
       {
         objetoSelecionado.PontosUltimo().X = mouseX;
         objetoSelecionado.PontosUltimo().Y = mouseY;
+      }
+      if(mouseAlterarPto && (objetoSelecionado != null)){
+        objetoSelecionado.pontoAlterar.X = mouseX;
+        objetoSelecionado.pontoAlterar.Y = mouseY;
       }
     }
 

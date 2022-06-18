@@ -13,6 +13,8 @@ namespace gcgcg
 
     public ObjetoGeometria(char rotulo, Objeto paiRef) : base(rotulo, paiRef) { }
 
+    public Ponto4D pontoAlterar = null;
+
     protected override void DesenharGeometria()
     {
       DesenharObjeto();
@@ -67,8 +69,8 @@ namespace gcgcg
             if(isRemove == true){
               PontosRemoverAt(posicaoMenorDistancia);
             } else {
-              PontosRemoverAt(posicaoMenorDistancia);
-              PontosAdicionar(pontoMouse);
+              PontosAlterar(pontoMouse, posicaoMenorDistancia);
+              pontoAlterar = pontosLista[posicaoMenorDistancia];
             }
     
         }
