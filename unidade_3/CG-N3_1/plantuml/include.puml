@@ -14,6 +14,7 @@ abstract class Objeto {
     + Desenhar() : void
     + FilhoAdicionar(filho:Objeto) : void
     + FilhoRemover(filho:Objeto) : void
+    + VerificaEstaDentroBBox(pto:Ponto4D) : bool
 }
 Objeto --> "ObjetoCor" Cor
 Objeto --> "PrimitivaTipo" PrimitiveType
@@ -21,9 +22,15 @@ Objeto --> "BBox" BBox
 abstract class ObjetoGeometria {
     + ObjetoGeometria(rotulo:string, paiRef:Objeto)
     + PontosAdicionar(pto:Ponto4D) : void
+    + PontosRemoverAt(posicao:int) : void
     + PontosRemoverUltimo() : void
     + PontosUltimo() : Ponto4D
     + PontosAlterar(pto:Ponto4D, posicao:int) : void
+    + VerticeMaisProximo(pontoMouse:Ponto4D, isRemove:bool) : void
+    + ScanlineIntesec(y:double, y1:double, y2:double) : double
+    + ScanLine(pontoMouse:Ponto4D) : bool
+    + ScanlineCalcularXi(x1:double, x2:double, t:double) : double
+    + ScanLine(pontoMouse:Ponto4D, listaPontos:List<Ponto4D>) : bool
     + <<override>> ToString() : string
 }
 Objeto <|-- ObjetoGeometria
@@ -32,6 +39,11 @@ class Retangulo {
     + <<override>> ToString() : string
 }
 ObjetoGeometria <|-- Retangulo
+class Poligono {
+    + Poligono(rotulo:string, pai:Objeto)
+    + <<override>> ToString() : string
+}
+ObjetoGeometria <|-- Poligono
 abstract class Utilitario {
     + {static} AjudaTeclado() : void
 }
@@ -43,12 +55,10 @@ class Privado_Circulo {
     + <<override>> ToString() : string
 }
 ObjetoGeometria <|-- Privado_Circulo
-abstract class Privado_Matematica {
-    + {static} DistanciaEuclidiana(pto1:Ponto4D, pto2:Ponto4D) : double
-    + {static} DistanciaEuclidianaSemRaiz(pto1:Ponto4D, pto2:Ponto4D) : double
-    + {static} ScanLineInterseccao(yi:double, y1:double, y2:double) : double
-    + {static} ScanLineCalculaXi(x1:double, x2:double, ti:double) : double
-    + {static} ScanLine(ptoClique:Ponto4D, ptoIni:Ponto4D, ptoFim:Ponto4D) : bool
+abstract class Matematica {
+    + {static} GerarPtosCirculo(angulo:double, raio:double) : Ponto4D
+    + {static} GerarPtosCirculoSimétrico(raio:double) : double
+    + {static} DistanciaEuclidiana(pontoLista:Ponto4D, pontoMouse:Ponto4D) : double
 }
 class Privado_SegReta {
     + Privado_SegReta(rotulo:string, paiRef:Objeto, ptoIni:Ponto4D, ptoFim:Ponto4D)

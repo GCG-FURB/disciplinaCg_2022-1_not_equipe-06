@@ -53,6 +53,7 @@ class Cor {
 abstract class Matematica {
     + {static} GerarPtosCirculo(angulo:double, raio:double) : Ponto4D
     + {static} GerarPtosCirculoSimétrico(raio:double) : double
+    + {static} DistanciaEuclidiana(pontoLista:Ponto4D, pontoMouse:Ponto4D) : double
 }
 class Ponto4D {
     + Ponto4D(x:double, y:double, z:double, w:double)
