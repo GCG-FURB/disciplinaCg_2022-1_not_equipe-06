@@ -1,0 +1,13 @@
+Trabalho 4:
+
+A ideia consiste em controlar uma bola para destruir formas no outro lado do board.
+As formas que a bolinha bate são excluídas.
+Se o jogador não conseguir bater na bolinha de novo, a bola sai do board e o jogador perde o jogo.
+
+Objetos:
+Bola - Esfera - Opengl
+Retangulos
+Colisão - 2d1/2
+
+Função opengl:
+Camera - configurar - 4 teclas "joystick"
