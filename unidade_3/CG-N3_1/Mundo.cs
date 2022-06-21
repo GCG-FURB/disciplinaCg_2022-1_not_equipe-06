@@ -168,12 +168,14 @@ namespace gcgcg
         {
           if(objetosLista[i] == objetoSelecionado){
             objetosLista.Remove(objetoSelecionado);
+            objetoSelecionado = null;
           } else {
             List<Objeto> filhos = objetosLista[i].Filhos();
             if(filhos != null){
-              foreach (ObjetoGeometria objetoFilho in filhos){
-                if(objetoFilho == objetoSelecionado){
-                  objetosLista[i].FilhoRemover(objetoFilho);
+              for (int p=0; p < filhos.Count; p++){
+                if(filhos[p] == objetoSelecionado){
+                  objetosLista[i].FilhoRemover(filhos[p]);
+                  objetoSelecionado = null;
                 }
               }
             }
