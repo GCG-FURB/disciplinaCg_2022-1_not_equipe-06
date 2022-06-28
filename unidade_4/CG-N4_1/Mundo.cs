@@ -16,7 +16,7 @@ namespace gcgcg
 {
   class Mundo : GameWindow
   {
-    private static Mundo instanciaMundo = null;
+     private static Mundo instanciaMundo = null;
 
     private Mundo(int width, int height) : base(width, height) { }
 
@@ -37,6 +37,8 @@ namespace gcgcg
     private bool mouseAlterarPto = false;
     private Poligono obj_Poligno;
     private bool novoPoligno = true;
+    private float fovy, aspect, near, far;
+    private Vector3 eye, at, up;
 #if CG_Privado
     private Privado_SegReta obj_SegReta;
     private Privado_Circulo obj_Circulo;
@@ -50,6 +52,13 @@ namespace gcgcg
       Console.WriteLine(" --- Ajuda / Teclas: ");
       Console.WriteLine(" [  H     ] mostra teclas usadas. ");
 
+      fovy = (float)Math.PI / 4;
+      aspect = Width / (float)Height;
+      near = 1.0f;
+      far = 50.0f;
+      eye = new Vector3(10, 10, 10);
+      at = new Vector3(0, 0, 0);
+      up = new Vector3(0, 1, 0);
       /*objetoId = Utilitario.charProximo(objetoId);
       obj_Poligno = new Poligno(objetoId, null);
       obj_Poligno.ObjetoCor.CorR = 255; obj_Poligno.ObjetoCor.CorG = 255; obj_Poligno.ObjetoCor.CorB = 0;
@@ -72,6 +81,15 @@ namespace gcgcg
 #endif
       GL.ClearColor(0.5f, 0.5f, 0.5f, 1.0f);
     }
+    protected override void OnResize(EventArgs e)
+    {
+      base.OnResize(e);
+
+      GL.Viewport(ClientRectangle.X, ClientRectangle.Y, ClientRectangle.Width, ClientRectangle.Height);
+      Matrix4 projection = Matrix4.CreatePerspectiveFieldOfView((float)Math.PI / 4, Width / (float)Height, near, far);
+      GL.MatrixMode(MatrixMode.Projection);
+      GL.LoadMatrix(ref projection);
+    }
     protected override void OnUpdateFrame(FrameEventArgs e)
     {
       base.OnUpdateFrame(e);
@@ -82,9 +100,12 @@ namespace gcgcg
     protected override void OnRenderFrame(FrameEventArgs e)
     {
       base.OnRenderFrame(e);
-      GL.Clear(ClearBufferMask.ColorBufferBit);
+      GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+      //GL.MatrixMode(MatrixMode.Modelview);
+      //GL.LoadIdentity();
+      Matrix4 modelview = Matrix4.LookAt(eye, at, up);
       GL.MatrixMode(MatrixMode.Modelview);
-      GL.LoadIdentity();
+      GL.LoadMatrix(ref modelview);
 #if CG_Gizmo      
       Sru3D();
 #endif
@@ -97,174 +118,16 @@ namespace gcgcg
 
     protected override void OnKeyDown(OpenTK.Input.KeyboardKeyEventArgs e)
     {
-      if (e.Key == Key.H)
-        Utilitario.AjudaTeclado();
-      else if (e.Key == Key.Escape)
-        Exit();
-      else if (e.Key == Key.E)
-      {
-        Console.WriteLine("--- Objetos / Pontos: ");
-        for (var i = 0; i < objetosLista.Count; i++)
-        {
-          Console.WriteLine(objetosLista[i]);
-          List<Objeto> filhos = objetosLista[i].Filhos();
-          if(filhos != null){
-            foreach (ObjetoGeometria objetoFilho in filhos){
-              if(objetoFilho == objetoSelecionado){
-                Console.WriteLine(objetoFilho);
-              }
-            }
-          }
-        }
-      }
-      else if (e.Key == Key.O)
-        bBoxDesenhar = !bBoxDesenhar;
-      else if (e.Key == Key.R && objetoSelecionado != null) {
-        objetoSelecionado.ObjetoCor.CorR = 255; objetoSelecionado.ObjetoCor.CorG = 0; objetoSelecionado.ObjetoCor.CorB = 0;
-      }
-      else if (e.Key == Key.G && objetoSelecionado != null) {
-        objetoSelecionado.ObjetoCor.CorR = 0; objetoSelecionado.ObjetoCor.CorG = 255; objetoSelecionado.ObjetoCor.CorB = 0;
-      }
-      else if (e.Key == Key.B && objetoSelecionado != null) {
-        objetoSelecionado.ObjetoCor.CorR = 0; objetoSelecionado.ObjetoCor.CorG = 0; objetoSelecionado.ObjetoCor.CorB = 255;
-      }
-      else if (e.Key == Key.Space){
-        if(novoPoligno == true){
-          objetoId = Utilitario.charProximo(objetoId);
-          obj_Poligno =  new Poligono(objetoId, null);
-          obj_Poligno.PrimitivaTipo = PrimitiveType.LineLoop;
-          obj_Poligno.PontosAdicionar(new Ponto4D(mouseX, mouseY));
-          obj_Poligno.PontosAdicionar(new Ponto4D(mouseX, mouseY));
-          obj_Poligno.ObjetoCor.CorR = 255; obj_Poligno.ObjetoCor.CorG = 255; obj_Poligno.ObjetoCor.CorB = 255;
-          if(objetoSelecionado != null){
-            objetoSelecionado.FilhoAdicionar(obj_Poligno);
-          }else{
-            objetosLista.Add(obj_Poligno);
-          }
-          objetoSelecionado = obj_Poligno;
-          novoPoligno = false;
-          mouseMoverPto = true;
-        } else {
-          objetoSelecionado.PontosRemoverUltimo();
-          objetoSelecionado.PontosAdicionar(new Ponto4D(mouseX, mouseY));
-          objetoSelecionado.PontosAdicionar(new Ponto4D(mouseX, mouseY));
-        }
-      } else if (e.Key == Key.Enter) {
-        if(mouseAlterarPto == false){
-          objetoSelecionado.PontosRemoverUltimo();
-        } else {
-          mouseAlterarPto = false;
-        }
-        mouseMoverPto = false;
-        novoPoligno = true;
-      } else if (e.Key == Key.S && objetoSelecionado != null){
-        if(objetoSelecionado.PrimitivaTipo == PrimitiveType.LineLoop){
-          objetoSelecionado.PrimitivaTipo = PrimitiveType.LineStrip;
-        } else {
-          objetoSelecionado.PrimitivaTipo = PrimitiveType.LineLoop;
-        }
-      } else if (e.Key == Key.C && objetoSelecionado != null){
-          for (var i = 0; i < objetosLista.Count; i++)
-        {
-          if(objetosLista[i] == objetoSelecionado){
-            objetosLista.Remove(objetoSelecionado);
-            objetoSelecionado = null;
-          } else {
-            List<Objeto> filhos = objetosLista[i].Filhos();
-            if(filhos != null){
-              for (int p=0; p < filhos.Count; p++){
-                if(filhos[p] == objetoSelecionado){
-                  objetosLista[i].FilhoRemover(filhos[p]);
-                  objetoSelecionado = null;
-                }
-              }
-            }
-          }
-        }
-          
-      } else if (e.Key == Key.D && objetoSelecionado != null){
-          objetoSelecionado.VerticeMaisProximo(new Ponto4D(mouseX, mouseY), true);
-      } else if(e.Key == Key.V && objetoSelecionado != null){
-          objetoSelecionado.VerticeMaisProximo(new Ponto4D(mouseX, mouseY), false);
-          mouseAlterarPto = true;
-          novoPoligno = false;     
-      } else if (e.Key == Key.I && objetoSelecionado != null){
-        objetoSelecionado.AtribuirIdentidade();
-      } else if (e.Key == Key.M && objetoSelecionado != null){
-        objetoSelecionado.MatrizToString();
+      if (e.Key == Key.D && objetoSelecionado != null){
+        
       } else if (e.Key == Key.Left && objetoSelecionado != null){
-        objetoSelecionado.TranslacaoXYZ(-10, 0, 0);
+        
       } else if (e.Key == Key.Right && objetoSelecionado != null){
-        objetoSelecionado.TranslacaoXYZ(10, 0, 0);
+        
       } else if (e.Key == Key.Up && objetoSelecionado != null){
-        objetoSelecionado.TranslacaoXYZ(0, 10, 0);
+        
       } else if (e.Key == Key.Down && objetoSelecionado != null){
-        objetoSelecionado.TranslacaoXYZ(0, -10, 0);
-      } else if (e.Key == Key.PageUp && objetoSelecionado != null){
-        objetoSelecionado.EscalaXYZ(2, 2, 2);
-      } else if (e.Key == Key.PageDown && objetoSelecionado != null){
-        objetoSelecionado.EscalaXYZ(0.5, 0.5, 0.5);
-      } else if (e.Key == Key.Home && objetoSelecionado != null){
-        objetoSelecionado.EscalaZBBox(0.5, 0.5, 0.5);
-      } else if (e.Key == Key.End && objetoSelecionado != null){
-        objetoSelecionado.EscalaZBBox(2, 2, 2);
-      } else if (e.Key == Key.Number1 && objetoSelecionado != null){
-        objetoSelecionado.Rotacao(10);
-      } else if (e.Key == Key.Number2 && objetoSelecionado != null){
-        objetoSelecionado.Rotacao(-10);
-      } else if (e.Key == Key.Number3 && objetoSelecionado != null){
-        objetoSelecionado.RotacaoZBBox(10);
-      } else if (e.Key == Key.Number4 && objetoSelecionado != null){
-        objetoSelecionado.RotacaoZBBox(-10);
-      } else if (e.Key == Key.Number5){
-        objetoSelecionado = null;
-      } else if (e.Key == Key.X && objetoSelecionado != null){
-        objetoSelecionado.eixoRotacao = 'x';
-      } else if (e.Key == Key.Y && objetoSelecionado != null){
-        objetoSelecionado.eixoRotacao = 'y';
-      } else if (e.Key == Key.Z&& objetoSelecionado != null){
-        objetoSelecionado.eixoRotacao = 'z';
-      } else if (e.Key == Key.P){
-        Console.WriteLine("--- Objeto Selecionado: ");
-        for (var i = 0; i < objetosLista.Count; i++)
-        {
-          if(objetosLista[i] == objetoSelecionado){
-            Console.WriteLine(objetosLista[i]);
-          } else {
-            List<Objeto> filhos = objetosLista[i].Filhos();
-            if(filhos != null){
-              foreach (ObjetoGeometria objetoFilho in filhos){
-                if(objetoFilho == objetoSelecionado){
-                  Console.WriteLine(objetoFilho);
-                }
-              }
-            }
-          }
-        }
-      } else if (e.Key == Key.A){
-        Ponto4D pontoMouse = new Ponto4D(mouseX, mouseY);
-        bool dentroFilho = false;
-        bool dentroPai = false; 
-        foreach (ObjetoGeometria objeto in this.objetosLista){
-          List<Objeto> filhos = objeto.Filhos();
-          if(filhos != null){
-            foreach (ObjetoGeometria objetoFilho in filhos){
-              objetoFilho.VerificaEstaDentroBBox(pontoMouse);
-              dentroFilho = objetoFilho.ScanLine(new Ponto4D(mouseX, mouseY));
-              if(dentroFilho == true){
-                objetoSelecionado = objetoFilho;
-              }
-            }
-          }
-          objeto.VerificaEstaDentroBBox(pontoMouse);
-          dentroPai = objeto.ScanLine(new Ponto4D(mouseX, mouseY));
-          if(dentroPai == true){
-            objetoSelecionado = objeto;
-          }
-          if(dentroPai == false && dentroFilho == false){
-            objetoSelecionado = null;
-          }
-        }
+        
       }
 
       else

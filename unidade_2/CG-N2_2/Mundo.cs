@@ -100,7 +100,7 @@ namespace gcgcg
         Utilitario.AjudaTeclado();
       else if (e.Key == Key.Escape)
         Exit();
-      else if (e.Key == Key.E)
+      else if (e.Key == Key.D)
       {
         camera.PanEsquerda();
         //Console.WriteLine("--- Objetos / Pontos: ");
@@ -116,11 +116,11 @@ namespace gcgcg
         mouseMoverPto = !mouseMoverPto;   //TODO: falta atualizar a BBox do objeto
       else if(e.Key == Key.I){
         camera.ZoomIn();
-      } else if (e.Key == Key.D){
+      } else if (e.Key == Key.E){
         camera.PanDireita();
-      } else if (e.Key == Key.C){
-        camera.PanCima();
       } else if (e.Key == Key.B){
+        camera.PanCima();
+      } else if (e.Key == Key.C){
         camera.PanBaixo();
       }
       else
