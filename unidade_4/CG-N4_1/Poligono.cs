@@ -8,15 +8,19 @@ namespace gcgcg
 
         public Poligono(char rotulo, Objeto pai) : base(rotulo, pai)
         {
-
+            base.PontosAdicionar(new Ponto4D(0,0,0));
+            base.PontosAdicionar(new Ponto4D(10,0,0));
+            base.PontosAdicionar(new Ponto4D(10,0,20));
+            base.PontosAdicionar(new Ponto4D(0,0,20));
         }
         protected override void DesenharObjeto()
         {
             GL.PointSize(3);
+            GL.LineWidth(5);
             GL.Begin(base.PrimitivaTipo);
             foreach (Ponto4D pto in pontosLista)
             {
-                GL.Vertex2(pto.X, pto.Y);
+                GL.Vertex3(pto.X, pto.Y,pto.Z);
             }
             GL.End();
         }

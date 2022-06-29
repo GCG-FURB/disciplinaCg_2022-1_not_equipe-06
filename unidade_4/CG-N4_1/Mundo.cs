@@ -27,7 +27,7 @@ namespace gcgcg
       return instanciaMundo;
     }
 
-    private CameraOrtho camera = new CameraOrtho();
+    private CameraPerspective camera = new CameraPerspective();
     protected List<Objeto> objetosLista = new List<Objeto>();
     private ObjetoGeometria objetoSelecionado = null;
     private char objetoId = '@';
@@ -36,6 +36,7 @@ namespace gcgcg
     private bool mouseMoverPto = false;
     private bool mouseAlterarPto = false;
     private Poligono obj_Poligno;
+    private Cubo obj_Cubo;
     private bool novoPoligno = true;
     private float fovy, aspect, near, far;
     private Vector3 eye, at, up;
@@ -47,24 +48,32 @@ namespace gcgcg
     protected override void OnLoad(EventArgs e)
     {
       base.OnLoad(e);
-      camera.xmin = 0; camera.xmax = 600; camera.ymin = 0; camera.ymax = 600;
+      GL.ClearColor(0.5f, 0.5f, 0.5f, 1.0f);
+      GL.Enable(EnableCap.DepthTest);
+      GL.Enable(EnableCap.CullFace);
 
       Console.WriteLine(" --- Ajuda / Teclas: ");
       Console.WriteLine(" [  H     ] mostra teclas usadas. ");
 
       fovy = (float)Math.PI / 4;
       aspect = Width / (float)Height;
-      near = 1.0f;
-      far = 50.0f;
-      eye = new Vector3(10, 10, 10);
-      at = new Vector3(0, 0, 0);
+      near = 0.01f;
+      far = 500.0f;
+      eye = new Vector3(5, 20, 50);
+      at = new Vector3(5, 0, 0);
       up = new Vector3(0, 1, 0);
-      /*objetoId = Utilitario.charProximo(objetoId);
-      obj_Poligno = new Poligno(objetoId, null);
+
+      objetoId = Utilitario.charProximo(objetoId);
+      obj_Poligno = new Poligono(objetoId, null);
       obj_Poligno.ObjetoCor.CorR = 255; obj_Poligno.ObjetoCor.CorG = 255; obj_Poligno.ObjetoCor.CorB = 0;
       objetosLista.Add(obj_Poligno);
       objetoSelecionado = obj_Poligno;
-      */
+      
+      objetoId = Utilitario.charProximo(objetoId);
+      obj_Cubo = new Cubo(objetoId, null);
+      obj_Cubo.ObjetoCor.CorR = 255; obj_Cubo.ObjetoCor.CorG = 0; obj_Cubo.ObjetoCor.CorB = 255;
+      objetosLista.Add(obj_Cubo);
+      objetoSelecionado = obj_Cubo;
 
 #if CG_Privado
       /*objetoId = Utilitario.charProximo(objetoId);
@@ -93,16 +102,12 @@ namespace gcgcg
     protected override void OnUpdateFrame(FrameEventArgs e)
     {
       base.OnUpdateFrame(e);
-      GL.MatrixMode(MatrixMode.Projection);
-      GL.LoadIdentity();
-      GL.Ortho(camera.xmin, camera.xmax, camera.ymin, camera.ymax, camera.zmin, camera.zmax);
     }
     protected override void OnRenderFrame(FrameEventArgs e)
     {
       base.OnRenderFrame(e);
       GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-      //GL.MatrixMode(MatrixMode.Modelview);
-      //GL.LoadIdentity();
+   
       Matrix4 modelview = Matrix4.LookAt(eye, at, up);
       GL.MatrixMode(MatrixMode.Modelview);
       GL.LoadMatrix(ref modelview);
@@ -111,13 +116,14 @@ namespace gcgcg
 #endif
       for (var i = 0; i < objetosLista.Count; i++)
         objetosLista[i].Desenhar();
-      if (bBoxDesenhar && (objetoSelecionado != null))
-        objetoSelecionado.BBox.Desenhar();
+
       this.SwapBuffers();
     }
 
+
     protected override void OnKeyDown(OpenTK.Input.KeyboardKeyEventArgs e)
     {
+      camera.MenuTecla(e.Key, 'x', 10);
       if (e.Key == Key.D && objetoSelecionado != null){
         
       } else if (e.Key == Key.Left && objetoSelecionado != null){
@@ -143,10 +149,6 @@ namespace gcgcg
         objetoSelecionado.PontosUltimo().X = mouseX;
         objetoSelecionado.PontosUltimo().Y = mouseY;
       }
-      if(mouseAlterarPto && (objetoSelecionado != null)){
-        objetoSelecionado.pontoAlterar.X = mouseX;
-        objetoSelecionado.pontoAlterar.Y = mouseY;
-      }
     }
 
 #if CG_Gizmo
@@ -156,13 +158,13 @@ namespace gcgcg
       GL.Begin(PrimitiveType.Lines);
       //GL.Color3(1.0f,0.0f,0.0f);
       GL.Color3(Convert.ToByte(255), Convert.ToByte(0), Convert.ToByte(0));
-      GL.Vertex3(0, 0, 0); GL.Vertex3(200, 0, 0);
+      GL.Vertex3(0, 0, 0); GL.Vertex3(10, 0, 0);
       // GL.Color3(0.0f,1.0f,0.0f);
       GL.Color3(Convert.ToByte(0), Convert.ToByte(255), Convert.ToByte(0));
-      GL.Vertex3(0, 0, 0); GL.Vertex3(0, 200, 0);
+      GL.Vertex3(0, 0, 0); GL.Vertex3(0, 10, 0);
       // GL.Color3(0.0f,0.0f,1.0f);
       GL.Color3(Convert.ToByte(0), Convert.ToByte(0), Convert.ToByte(255));
-      GL.Vertex3(0, 0, 0); GL.Vertex3(0, 0, 200);
+      GL.Vertex3(0, 0, 0); GL.Vertex3(0, 0, 10);
       GL.End();
     }
 #endif    
