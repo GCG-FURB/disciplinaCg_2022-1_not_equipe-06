@@ -1,0 +1,70 @@
+base.PontosAdicionar(new Ponto4D(-1,-1,30));
+            base.PontosAdicionar(new Ponto4D(1,-1,30));
+            base.PontosAdicionar(new Ponto4D(1,1,30));
+            base.PontosAdicionar(new Ponto4D(-1,1,30));
+            base.PontosAdicionar(new Ponto4D(-1,1,-1));
+            base.PontosAdicionar(new Ponto4D(1,1,-1));
+            base.PontosAdicionar(new Ponto4D(1,-1,-1));
+            base.PontosAdicionar(new Ponto4D(-1,-1,-1));
+
+
+GL.Begin(PrimitiveType.Quads);
+
+            // Face da frente
+            GL.Normal3(0, 0, 1);
+            GL.Vertex3(-1.0f, -1.0f, 30.0f);
+            GL.Vertex3(1.0f, -1.0f, 30.0f);
+            GL.Vertex3(1.0f, 1.0f, 30.0f);
+            GL.Vertex3(-1.0f, 1.0f, 30.0f);
+            // Face do fundo
+            GL.Normal3(0, 0, -1);
+            GL.Vertex3(-1.0f, -1.0f, -1.0f);
+            GL.Vertex3(-1.0f, 1.0f, -1.0f);
+            GL.Vertex3(1.0f, 1.0f, -1.0f);
+            GL.Vertex3(1.0f, -1.0f, -1.0f);
+            // Face de cima
+            GL.Normal3(0, 1, 0);
+            GL.Vertex3(-1.0f, 1.0f, 30.0f);
+            GL.Vertex3(1.0f, 1.0f, 30.0f);
+            GL.Vertex3(1.0f, 1.0f, -1.0f);
+            GL.Vertex3(-1.0f, 1.0f, -1.0f);
+            // Face de baixo
+            GL.Normal3(0, -1, 0);
+            GL.Vertex3(-1.0f, -1.0f, 30.0f);
+            GL.Vertex3(-1.0f, -1.0f, -1.0f);
+            GL.Vertex3(1.0f, -1.0f, -1.0f);
+            GL.Vertex3(1.0f, -1.0f, 30.0f);
+            // Face da direita
+            GL.Normal3(1, 0, 0);
+            GL.Vertex3(1.0f, -1.0f, 30.0f);
+            GL.Vertex3(1.0f, -1.0f, -1.0f);
+            GL.Vertex3(1.0f, 1.0f, -1.0f);
+            GL.Vertex3(1.0f, 1.0f, 30.0f);
+            // Face da esquerda
+            GL.Normal3(-1, 0, 0);
+            GL.Vertex3(-1.0f, -1.0f, 30.0f);
+            GL.Vertex3(-1.0f, 1.0f, 30.0f);
+            GL.Vertex3(-1.0f, 1.0f, -1.0f);
+            GL.Vertex3(-1.0f, -1.0f, -1.0f);
+
+            GL.End(); 
+			
+			
+base.PontosAdicionar(new Ponto4D(24,-1,30));
+            base.PontosAdicionar(new Ponto4D(26,-1,30));
+            base.PontosAdicionar(new Ponto4D(26,1,30));
+            base.PontosAdicionar(new Ponto4D(24,1,30));
+            base.PontosAdicionar(new Ponto4D(24,1,-1));
+            base.PontosAdicionar(new Ponto4D(26,1,-1));
+            base.PontosAdicionar(new Ponto4D(26,-1,-1));
+            base.PontosAdicionar(new Ponto4D(24,-1,-1));
+			
+			
+base.PontosAdicionar(new Ponto4D(-1,-1,-1));
+            base.PontosAdicionar(new Ponto4D(-1,-1,1));
+            base.PontosAdicionar(new Ponto4D(-1,1,-1));
+            base.PontosAdicionar(new Ponto4D(-1,1,1));      
+            base.PontosAdicionar(new Ponto4D(25,-1,-1));
+            base.PontosAdicionar(new Ponto4D(25,-1,1));
+            base.PontosAdicionar(new Ponto4D(25,1,-1));
+            base.PontosAdicionar(new Ponto4D(25,1,1));  

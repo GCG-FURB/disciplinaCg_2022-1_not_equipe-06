@@ -3,15 +3,14 @@ using CG_Biblioteca;
 
 namespace gcgcg
 {
-    internal class Cubo : ObjetoGeometria
+    internal class Esfera : ObjetoGeometria
     {
         private float Xmin;
         private float Xmax;
         private float Zmax;
         private float Zmin;
-        public bool isParede;
 
-        public Cubo(char rotulo, Objeto pai, float xmin, float xmax, float zmin, float zmax, bool isParede) : base(rotulo, pai)
+        public Esfera(char rotulo, Objeto pai, float xmin, float xmax, float zmin, float zmax) : base(rotulo, pai)
         {
             Xmin = xmin;
             Xmax = xmax;

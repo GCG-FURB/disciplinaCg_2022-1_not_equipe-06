@@ -148,5 +148,9 @@ namespace gcgcg
       return false;                                                                                            
     }
 
+    public double ObterTranslaçãoEmX(){
+      return matriz.ObterElemento(12);
+    }
+
   }
 }

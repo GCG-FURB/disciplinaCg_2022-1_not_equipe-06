@@ -9,9 +9,9 @@ namespace gcgcg
         public Poligono(char rotulo, Objeto pai) : base(rotulo, pai)
         {
             base.PontosAdicionar(new Ponto4D(0,0,0));
-            base.PontosAdicionar(new Ponto4D(10,0,0));
-            base.PontosAdicionar(new Ponto4D(10,0,20));
-            base.PontosAdicionar(new Ponto4D(0,0,20));
+            base.PontosAdicionar(new Ponto4D(25,0,0));
+            base.PontosAdicionar(new Ponto4D(25,0,30));
+            base.PontosAdicionar(new Ponto4D(0,0,30));
         }
         protected override void DesenharObjeto()
         {
