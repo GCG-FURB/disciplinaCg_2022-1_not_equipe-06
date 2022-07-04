@@ -147,9 +147,6 @@ namespace gcgcg
     public void tratamentoColisao(){
       for (var i = 0; i < objetosLista.Count; i++)
       {
-        if(objetosLista[i]){
-          
-        }
           
       }
     }
@@ -180,9 +177,9 @@ namespace gcgcg
           objetoSelecionado.TranslacaoXYZ(2, 0, 0);
         }
       } else if (e.Key == Key.Up && objetoSelecionado != null){
-        objetoSelecionado.TranslacaoXYZ(0, 2, 0);
+        objetoSelecionado.TranslacaoXYZ(0, 0, -2);
       } else if (e.Key == Key.Down && objetoSelecionado != null){
-        objetoSelecionado.TranslacaoXYZ(0, -2, 0);
+        objetoSelecionado.TranslacaoXYZ(0, 0, 2);
       } else if (e.Key == Key.M && objetoSelecionado != null){
         objetoSelecionado.MatrizToString();
       }
