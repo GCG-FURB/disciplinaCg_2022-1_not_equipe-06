@@ -7,6 +7,7 @@
 
 using System;
 using OpenTK;
+using System.Threading;
 using OpenTK.Graphics.OpenGL;
 using System.Collections.Generic;
 using OpenTK.Input;
@@ -28,20 +29,23 @@ namespace gcgcg
     }
 
     private CameraPerspective camera = new CameraPerspective();
-    protected List<Objeto> objetosLista = new List<Objeto>();
+    protected static List<Objeto> objetosLista = new List<Objeto>();
     protected List<Objeto> objetosLinha = new List<Objeto>();
-    private ObjetoGeometria objetoSelecionado = null;
-    private char objetoId = '@';
+    private static ObjetoGeometria objetoSelecionado = null;
+    private static char objetoId = '@';
     private bool bBoxDesenhar = false;
     int mouseX, mouseY;   //TODO: achar método MouseDown para não ter variável Global
     private bool mouseMoverPto = false;
     private bool mouseAlterarPto = false;
     private Poligono obj_Poligno;
-    private Cubo obj_Cubo;
+    private static Cubo obj_Cubo;
+    private static Esfera obj_Esfera;
     private bool novoPoligno = true;
     private float fovy, aspect, near, far;
     private Vector3 eye, at, up;
     private float speed = 1.5f;
+    double xSpeed = 0.1;
+    double zSpeed = 0.1;
 #if CG_Privado
     private Privado_SegReta obj_SegReta;
     private Privado_Circulo obj_Circulo;
@@ -69,7 +73,7 @@ namespace gcgcg
       objetoId = Utilitario.charProximo(objetoId);
       obj_Poligno = new Poligono(objetoId, null);
       obj_Poligno.ObjetoCor.CorR = 255; obj_Poligno.ObjetoCor.CorG = 255; obj_Poligno.ObjetoCor.CorB = 0;
-      //objetosLista.Add(obj_Poligno);
+      // objetosLista.Add(obj_Poligno);
       
       //Parede direita
       objetoId = Utilitario.charProximo(objetoId);
@@ -96,7 +100,34 @@ namespace gcgcg
       objetosLista.Add(obj_Cubo);
       objetoSelecionado = obj_Cubo;
 
+      objetoId = Utilitario.charProximo(objetoId);
+      obj_Esfera = new Esfera(objetoId, null);
+      obj_Esfera.ObjetoCor.CorR = 255; obj_Esfera.ObjetoCor.CorG = 255; obj_Esfera.ObjetoCor.CorB = 255;
+      objetosLista.Add(obj_Esfera);
+      
+      for (var i = 0; i < objetosLista.Count; i++){
+        if(objetosLista[i] == obj_Esfera){
+          objetosLista[i].TranslacaoXYZ(11,0,11);
+          objetosLista[i].BBox.Atribuir(new Ponto4D(10,0,10));
+          objetosLista[i].BBox.AtualizarMaiorX(12);
+          objetosLista[i].BBox.AtualizarMenorX(10);
+          objetosLista[i].BBox.AtualizarMenorZ(12);
+          objetosLista[i].BBox.AtualizarMaiorZ(10);
+        }
+      }
+
       criarNovaLinha();
+      criarNovaLinha();
+
+      //GL.ClearColor(1.5f, 1.5f, 0.5f, 1.0f);
+        //    GL.Enable(EnableCap.DepthTest);
+          //  GL.Enable(EnableCap.CullFace);
+            //GL.Enable(EnableCap.Lighting);
+            //GL.Enable(EnableCap.ColorMaterial);
+
+            //GL.Enable(EnableCap.Light0);
+            //GL.Light(LightName.Light0, LightParameter.Position, new float[] { 15, 15, 0 });
+            //GL.Light(LightName.Light0, LightParameter.Diffuse, new float[] { 1f, 1f, 1f });
 
 #if CG_Privado
       /*objetoId = Utilitario.charProximo(objetoId);
@@ -125,6 +156,10 @@ namespace gcgcg
     protected override void OnUpdateFrame(FrameEventArgs e)
     {
       base.OnUpdateFrame(e);
+      //var th = new Thread(criarNovaLinha);
+      //th.Start();
+      //Thread.Sleep(5000);
+      //Console.WriteLine("passou");
     }
     protected override void OnRenderFrame(FrameEventArgs e)
     {
@@ -142,13 +177,61 @@ namespace gcgcg
       if (bBoxDesenhar && (objetoSelecionado != null))
         objetoSelecionado.BBox.Desenhar();
       TratamentoColisao();
+      //criarNovaLinha();
+      movimentarBola();
       this.SwapBuffers();
     }
 
+    public bool verificaBateu(Ponto4D pMax, Ponto4D pMin){
+      bool isX = false;
+      for (var j = 0; j < objetosLista.Count; j++){
+        if(objetosLista[j] != obj_Esfera){
+          Cubo cubo = (Cubo) objetosLista[j];
+          if(cubo.VerificaEstaDentroBBox(pMax)){
+            isX = cubo.speedXorY(pMax);
+            Console.WriteLine("entrou max");
+            if(isX){
+              xSpeed = xSpeed * -1;
+            } else {
+              zSpeed = zSpeed * -1;
+            }
+            return true;
+          } else if (cubo.VerificaEstaDentroBBox(pMin)){
+            isX = cubo.speedXorY(pMin);
+            Console.WriteLine("entrou min");
+            if(isX){
+              xSpeed = xSpeed * -1;
+            } else {
+              zSpeed = zSpeed * -1;
+            }
+              return true;
+          }
+        }
+      }   
+      return false;
+    }
+    
+    public void movimentarBola(){
+       for (var i = 0; i < objetosLista.Count; i++){
+        if(objetosLista[i] ==  obj_Esfera){
+          Ponto4D pMax = new Ponto4D(objetosLista[i].BBox.obterMaiorX, objetosLista[i].BBox.obterMaiorY, objetosLista[i].BBox.obterMaiorZ);
+          Ponto4D pMin = new Ponto4D(objetosLista[i].BBox.obterMenorX, objetosLista[i].BBox.obterMenorY, objetosLista[i].BBox.obterMenorZ);
+          bool bateu = verificaBateu(pMax, pMin);
+          objetosLista[i].BBox.AtualizarMaiorX(objetosLista[i].BBox.obterMaiorX + xSpeed);
+          objetosLista[i].BBox.AtualizarMenorX(objetosLista[i].BBox.obterMenorX + xSpeed);
+          objetosLista[i].BBox.AtualizarMaiorZ(objetosLista[i].BBox.obterMaiorZ + zSpeed);
+          objetosLista[i].BBox.AtualizarMenorZ(objetosLista[i].BBox.obterMenorZ + zSpeed);
+          objetosLista[i].TranslacaoXYZ(xSpeed,0,zSpeed);
+        }
+       }
+      
+    }
     public void TratamentoColisao(){
-      Ponto4D pMax = new Ponto4D(objetoSelecionado.BBox.obterMaiorX, objetoSelecionado.BBox.obterMaiorY, objetoSelecionado.BBox.obterMaiorZ);
-      Ponto4D pMin = new Ponto4D(objetoSelecionado.BBox.obterMenorX, objetoSelecionado.BBox.obterMenorY, objetoSelecionado.BBox.obterMenorZ);
+      ObjetoGeometria bola = (ObjetoGeometria) obj_Esfera;
+      Ponto4D pMax = new Ponto4D(bola.BBox.obterMaiorX, bola.BBox.obterMaiorY, bola.BBox.obterMaiorZ);
+      Ponto4D pMin = new Ponto4D(bola.BBox.obterMenorX, bola.BBox.obterMenorY, bola.BBox.obterMenorZ);
       for (var i = 0; i < objetosLista.Count; i++){
+        if(objetosLista[i] != obj_Esfera){
         Cubo cubo = (Cubo) objetosLista[i];
         if(!cubo.isParede && objetoSelecionado != cubo){
           if(cubo.VerificaEstaDentroBBox(pMax)){
@@ -156,6 +239,7 @@ namespace gcgcg
           } else if (cubo.VerificaEstaDentroBBox(pMin)){
             objetosLista.Remove(cubo);
           }
+        }
         }
       }
     }
@@ -215,7 +299,20 @@ namespace gcgcg
       }
     }
 
-    private void criarNovaLinha(){
+    public static void criarNovaLinha(){
+      if(objetosLista.Count > 4){
+        for (var i = 0; i < objetosLista.Count; i++){
+        if(obj_Esfera != objetosLista[i]){
+          Cubo cubo = (Cubo) objetosLista[i];
+          if(!cubo.isParede && objetoSelecionado != cubo){
+            objetosLista[i].BBox.AtualizarMenorZ(objetosLista[i].BBox.obterMenorZ+1);
+            objetosLista[i].BBox.AtualizarMaiorZ(objetosLista[i].BBox.obterMaiorZ+1);
+            objetosLista[i].TranslacaoXYZ(0,0,1);
+          }
+        }
+        }
+      }
+      
       //obj1
       objetoId = Utilitario.charProximo(objetoId);
       obj_Cubo = new Cubo(objetoId, null, 1, 4, 1, 2, false);
@@ -282,10 +379,10 @@ namespace gcgcg
     static void Main(string[] args)
     {
       ToolkitOptions.Default.EnableHighResolution = false;
-
       Mundo window = Mundo.GetInstance(600, 600);
-      window.Title = "CG_N2";
+      window.Title = "CG_N4";
       window.Run(1.0 / 60.0);
+
     }
   }
 }

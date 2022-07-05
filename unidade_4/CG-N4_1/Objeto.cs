@@ -145,7 +145,20 @@ namespace gcgcg
       if(pto.X <= BBox.obterMaiorX && pto.X >= BBox.obterMenorX && pto.Y <= BBox.obterMaiorY && pto.Y >= BBox.obterMenorY && pto.Z <= BBox.obterMaiorZ && pto.Z >= BBox.obterMenorZ){
         return true;
       }            
+      
       return false;                                                                                            
+    }
+
+    public bool speedXorY(Ponto4D pto){
+      if(Math.Round(pto.X) == BBox.obterMaiorX || Math.Round(pto.X) == BBox.obterMenorX){
+          Console.WriteLine("sou x");
+          return true;
+      }
+      if(Math.Round(pto.Y) == BBox.obterMaiorY || Math.Round(pto.Y) == BBox.obterMenorY){
+        Console.WriteLine("sou x");
+        return false;
+      }
+      return false;
     }
 
     public double ObterTranslaçãoEmX(){

@@ -1,85 +1,110 @@
+/**
+  Autor: Dalton Solano dos Reis
+**/
+
+/// <summary>
+/// fonte: https://stackoverflow.com/questions/7687148/drawing-sphere-in-opengl-without-using-glusphere
+/// </summary>
 using OpenTK.Graphics.OpenGL;
+using System;
+using System.Collections.Generic;
 using CG_Biblioteca;
 
 namespace gcgcg
 {
-    internal class Esfera : ObjetoGeometria
+  internal class Esfera : ObjetoGeometria
+  {
+    //TODO: gerar os vetores normais, tem como fazer no link deste exemplo
+    private bool exibeVetorNormal = false;
+    //TODO: não precisava ter parte negativa, ter um tipo inteiro grande
+    protected List<int> listaTopologia = new List<int>();
+    public Esfera(char rotulo, Objeto paiRef) : base(rotulo, paiRef)
     {
-        private float Xmin;
-        private float Xmax;
-        private float Zmax;
-        private float Zmin;
+      // int segments = 10; // Números mais altos melhoram a qualidade 
+      // int radius = 1;    // O raio (largura) do cilindro
+      // int height = 10;   // A altura do cilindro
 
-        public Esfera(char rotulo, Objeto pai, float xmin, float xmax, float zmin, float zmax) : base(rotulo, pai)
-        {
-            Xmin = xmin;
-            Xmax = xmax;
-            Zmin = zmin;
-            Zmax = zmax;
-            base.PontosAdicionar(new Ponto4D(xmin,-1,zmax));
-            base.PontosAdicionar(new Ponto4D(xmax,-1,zmax));
-            base.PontosAdicionar(new Ponto4D(xmax,1,zmax));
-            base.PontosAdicionar(new Ponto4D(xmin,1,zmax));
-            base.PontosAdicionar(new Ponto4D(xmin,1,zmin));
-            base.PontosAdicionar(new Ponto4D(xmax,1,zmin));
-            base.PontosAdicionar(new Ponto4D(xmax,-1,zmin));
-            base.PontosAdicionar(new Ponto4D(xmin,-1,zmin));
-             
-        }
-        protected override void DesenharObjeto()
-        {
-            GL.Begin(PrimitiveType.Quads);
+      // for (double y = 0; y < 2; y++)
+      // {
+      //   for (double x = 0; x < segments; x++)
+      //   {
+      //     double theta = (x / (segments - 1)) * 2 * Math.PI;
+      //     base.PontosAdicionar(new Ponto4D(
+      //         (float)(radius * Math.Cos(theta)),
+      //         (float)(height * y),
+      //         (float)(radius * Math.Sin(theta))));
+      //   }
+      // }
+      // // ponto do centro da base
+      // base.PontosAdicionar(new Ponto4D(0, 0, 0));
+      // // ponto do centro da topo
+      // base.PontosAdicionar(new Ponto4D(0, height, 0));
 
-            // Face da frente
-            GL.Normal3(0, 0, 1);
-            GL.Vertex3(Xmin, -1.0f, Zmax);
-            GL.Vertex3(Xmax, -1.0f, Zmax);
-            GL.Vertex3(Xmax, 1.0f, Zmax);
-            GL.Vertex3(Xmin, 1.0f, Zmax);
-            // Face do fundo
-            GL.Normal3(0, 0, -1);
-            GL.Vertex3(Xmin, -1.0f, Zmin);
-            GL.Vertex3(Xmin, 1.0f, Zmin);
-            GL.Vertex3(Xmax, 1.0f, Zmin);
-            GL.Vertex3(Xmax, -1.0f, Zmin);
-            // Face de cima
-            GL.Normal3(0, 1, 0);
-            GL.Vertex3(Xmin, 1.0f, Zmax);
-            GL.Vertex3(Xmax, 1.0f, Zmax);
-            GL.Vertex3(Xmax, 1.0f, Zmin);
-            GL.Vertex3(Xmin, 1.0f, Zmin);
-            // Face de baixo
-            GL.Normal3(0, -1, 0);
-            GL.Vertex3(Xmin, -1.0f, Zmax);
-            GL.Vertex3(Xmin, -1.0f, Zmin);
-            GL.Vertex3(Xmax, -1.0f, Zmin);
-            GL.Vertex3(Xmax, -1.0f, Zmax);
-            // Face da direita
-            GL.Normal3(1, 0, 0);
-            GL.Vertex3(Xmax, -1.0f, Zmax);
-            GL.Vertex3(Xmax, -1.0f, Zmin);
-            GL.Vertex3(Xmax, 1.0f, Zmin);
-            GL.Vertex3(Xmax, 1.0f, Zmax);
-            // Face da esquerda
-            GL.Normal3(-1, 0, 0);
-            GL.Vertex3(Xmin, -1.0f, Zmax);
-            GL.Vertex3(Xmin, 1.0f, Zmax);
-            GL.Vertex3(Xmin, 1.0f, Zmin);
-            GL.Vertex3(Xmin, -1.0f, Zmin);
+      // //TODO: parce que alguams faces estão com a orientação errada.
+      // for (int x = 0; x < segments - 1; x++)
+      // {
+      //   // base
+      //   listaTopologia.Add(x);
+      //   listaTopologia.Add(x + 1);
+      //   listaTopologia.Add(segments - 1);
+      //   // topo
+      //   listaTopologia.Add(x);
+      //   listaTopologia.Add(x + 1);
+      //   listaTopologia.Add(segments);
+      // }
 
-            GL.End();   
-      }
-
-        //TODO: melhorar para exibir não só a lista de pontos (geometria), mas também a topologia ... poderia ser listado estilo OBJ da Wavefrom
-        public override string ToString()
-        {
-             string retorno;
-             retorno = "__ Objeto Retangulo: " + base.rotulo + "\n";
-             for (var i = 0; i < pontosLista.Count; i++)
-            {
-                retorno += "P" + i + "[" + pontosLista[i].X + "," + pontosLista[i].Y + "," + pontosLista[i].Z + "," + pontosLista[i].W + "]" + "\n";
-            }
-            return (retorno);
-        }
     }
+
+    protected override void DesenharObjeto()
+    {
+      // GL.Begin(PrimitiveType.Triangles);
+      // foreach (int index in listaTopologia)
+      //   GL.Vertex3(base.pontosLista[index].X, base.pontosLista[index].Y, base.pontosLista[index].Z);
+      // GL.End();
+
+      drawSphere(1,360,360);
+
+    }
+
+    void drawSphere(double r, int lats, int longs)
+    {
+      int i, j;
+            for (i = 0; i <= lats; i++)
+            {
+                double lat0 = Math.PI * (-0.5 + (double)(i - 1) / lats);
+                double z0 = Math.Sin(lat0);
+                double zr0 = Math.Cos(lat0);
+
+                double lat1 = Math.PI * (-0.5 + (double)i / lats);
+                double z1 = Math.Sin(lat1);
+                double zr1 = Math.Cos(lat1);
+
+                GL.Begin(PrimitiveType.Quads);
+                for (j = 0; j <= longs; j++)
+                {
+                    double lng = 2 * Math.PI * (double)(j - 1) / longs;
+                    double x = Math.Cos(lng);
+                    double y = Math.Sin(lng);
+
+                    GL.Normal3(x * zr0, y * zr0, z0);
+                    GL.Vertex3(r * x * zr0, r * y * zr0, r * z0);
+                    GL.Normal3(x * zr1, y * zr1, z1);
+                    GL.Vertex3(r * x * zr1, r * y * zr1, r * z1);
+                }
+                GL.End();
+            }
+    }
+    //TODO: melhorar para exibir não só a lista de pontos (geometria), mas também a topologia ... poderia ser listado estilo OBJ da Wavefrom
+    public override string ToString()
+    {
+      string retorno;
+      retorno = "__ Objeto Esfera: " + base.rotulo + "\n";
+      for (var i = 0; i < pontosLista.Count; i++)
+      {
+        retorno += "P" + i + "[" + pontosLista[i].X + "," + pontosLista[i].Y + "," + pontosLista[i].Z + "," + pontosLista[i].W + "]" + "\n";
+      }
+      return (retorno);
+    }
+
+  }
 }
