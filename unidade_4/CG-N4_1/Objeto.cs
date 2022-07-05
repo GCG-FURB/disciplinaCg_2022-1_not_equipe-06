@@ -150,12 +150,12 @@ namespace gcgcg
     }
 
     public bool speedXorY(Ponto4D pto){
-      if(Math.Round(pto.X) == BBox.obterMaiorX || Math.Round(pto.X) == BBox.obterMenorX){
+      if(Math.Round(pto.X) == Math.Round(BBox.obterMaiorX) || Math.Round(pto.X) == Math.Round(BBox.obterMenorX)){
           Console.WriteLine("sou x");
           return true;
       }
-      if(Math.Round(pto.Y) == BBox.obterMaiorY || Math.Round(pto.Y) == BBox.obterMenorY){
-        Console.WriteLine("sou x");
+      if(Math.Round(pto.Z) == Math.Round(BBox.obterMaiorZ) || Math.Round(pto.Z) == Math.Round(BBox.obterMenorZ)){
+        Console.WriteLine("sou z");
         return false;
       }
       return false;

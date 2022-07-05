@@ -12,6 +12,7 @@ using OpenTK.Graphics.OpenGL;
 using System.Collections.Generic;
 using OpenTK.Input;
 using CG_Biblioteca;
+using System.Threading.Tasks;
 
 namespace gcgcg
 {
@@ -46,6 +47,7 @@ namespace gcgcg
     private float speed = 1.5f;
     double xSpeed = 0.1;
     double zSpeed = 0.1;
+    private int _score;
 #if CG_Privado
     private Privado_SegReta obj_SegReta;
     private Privado_Circulo obj_Circulo;
@@ -78,25 +80,25 @@ namespace gcgcg
       //Parede direita
       objetoId = Utilitario.charProximo(objetoId);
       obj_Cubo = new Cubo(objetoId, null, 25, 27, -1, 30, true);
-      obj_Cubo.ObjetoCor.CorR = 255; obj_Cubo.ObjetoCor.CorG = 0; obj_Cubo.ObjetoCor.CorB = 255;
+      obj_Cubo.ObjetoCor.CorR = 0; obj_Cubo.ObjetoCor.CorG = 0; obj_Cubo.ObjetoCor.CorB = 0;
       objetosLista.Add(obj_Cubo);
       
       //Parede esquerda
       objetoId = Utilitario.charProximo(objetoId);
       obj_Cubo = new Cubo(objetoId, null, -1, 1, -1, 30, true);
-      obj_Cubo.ObjetoCor.CorR = 255; obj_Cubo.ObjetoCor.CorG = 0; obj_Cubo.ObjetoCor.CorB = 255;
+      obj_Cubo.ObjetoCor.CorR = 0; obj_Cubo.ObjetoCor.CorG = 0; obj_Cubo.ObjetoCor.CorB = 0;
       objetosLista.Add(obj_Cubo);
 
       //Parede fundo
       objetoId = Utilitario.charProximo(objetoId);
       obj_Cubo = new Cubo(objetoId, null, -1, 26, -1, 1, true);
-      obj_Cubo.ObjetoCor.CorR = 255; obj_Cubo.ObjetoCor.CorG = 0; obj_Cubo.ObjetoCor.CorB = 255;
+      obj_Cubo.ObjetoCor.CorR = 0; obj_Cubo.ObjetoCor.CorG = 0; obj_Cubo.ObjetoCor.CorB = 0;
       objetosLista.Add(obj_Cubo);
 
       //Cubo controlado
       objetoId = Utilitario.charProximo(objetoId);
       obj_Cubo = new Cubo(objetoId, null, 11, 14, 27, 28, false);
-      obj_Cubo.ObjetoCor.CorR = 0; obj_Cubo.ObjetoCor.CorG = 255; obj_Cubo.ObjetoCor.CorB = 0;
+      obj_Cubo.ObjetoCor.CorR = 0; obj_Cubo.ObjetoCor.CorG = 0; obj_Cubo.ObjetoCor.CorB = 255;
       objetosLista.Add(obj_Cubo);
       objetoSelecionado = obj_Cubo;
 
@@ -178,6 +180,11 @@ namespace gcgcg
         objetoSelecionado.BBox.Desenhar();
       TratamentoColisao();
       //criarNovaLinha();
+      //Task t = Task.Factory.StartNew(() =>
+      //      {
+      //          criarNovaLinha()
+      //          Thread.Sleep(5000);
+      //      });
       movimentarBola();
       this.SwapBuffers();
     }
@@ -236,8 +243,12 @@ namespace gcgcg
         if(!cubo.isParede && objetoSelecionado != cubo){
           if(cubo.VerificaEstaDentroBBox(pMax)){
             objetosLista.Remove(cubo);
+            _score++;
+            Console.WriteLine("Pontuação: "+_score);
           } else if (cubo.VerificaEstaDentroBBox(pMin)){
             objetosLista.Remove(cubo);
+            _score++;
+            Console.WriteLine("Pontuação: "+_score);
           }
         }
         }
