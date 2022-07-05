@@ -69,7 +69,7 @@ namespace gcgcg
       objetoId = Utilitario.charProximo(objetoId);
       obj_Poligno = new Poligono(objetoId, null);
       obj_Poligno.ObjetoCor.CorR = 255; obj_Poligno.ObjetoCor.CorG = 255; obj_Poligno.ObjetoCor.CorB = 0;
-      objetosLista.Add(obj_Poligno);
+      //objetosLista.Add(obj_Poligno);
       
       //Parede direita
       objetoId = Utilitario.charProximo(objetoId);
@@ -141,17 +141,24 @@ namespace gcgcg
         objetosLista[i].Desenhar();
       if (bBoxDesenhar && (objetoSelecionado != null))
         objetoSelecionado.BBox.Desenhar();
+      TratamentoColisao();
       this.SwapBuffers();
     }
 
-    public void tratamentoColisao(){
-      for (var i = 0; i < objetosLista.Count; i++)
-      {
-          
+    public void TratamentoColisao(){
+      Ponto4D pMax = new Ponto4D(objetoSelecionado.BBox.obterMaiorX, objetoSelecionado.BBox.obterMaiorY, objetoSelecionado.BBox.obterMaiorZ);
+      Ponto4D pMin = new Ponto4D(objetoSelecionado.BBox.obterMenorX, objetoSelecionado.BBox.obterMenorY, objetoSelecionado.BBox.obterMenorZ);
+      for (var i = 0; i < objetosLista.Count; i++){
+        Cubo cubo = (Cubo) objetosLista[i];
+        if(!cubo.isParede && objetoSelecionado != cubo){
+          if(cubo.VerificaEstaDentroBBox(pMax)){
+            objetosLista.Remove(cubo);
+          } else if (cubo.VerificaEstaDentroBBox(pMin)){
+            objetosLista.Remove(cubo);
+          }
+        }
       }
     }
-
-
     protected override void OnKeyDown(OpenTK.Input.KeyboardKeyEventArgs e)
     {
       if (e.Key == Key.O){
@@ -170,16 +177,26 @@ namespace gcgcg
         eye -= up * speed;
       } else if (e.Key == Key.Left && objetoSelecionado != null){
         if(objetoSelecionado.ObterTranslaçãoEmX() > -10){
-          objetoSelecionado.TranslacaoXYZ(-2, 0, 0);
+          objetoSelecionado.BBox.AtualizarMenorX(objetoSelecionado.BBox.obterMenorX-1);
+          objetoSelecionado.BBox.AtualizarMaiorX(objetoSelecionado.BBox.obterMaiorX-1);
+          objetoSelecionado.TranslacaoXYZ(-1, 0, 0);
         }
       } else if (e.Key == Key.Right && objetoSelecionado != null){
-        if(objetoSelecionado.ObterTranslaçãoEmX() < 10){
-          objetoSelecionado.TranslacaoXYZ(2, 0, 0);
+        if(objetoSelecionado.ObterTranslaçãoEmX() < 11){
+          objetoSelecionado.BBox.AtualizarMenorX(objetoSelecionado.BBox.obterMenorX+1);
+          objetoSelecionado.BBox.AtualizarMaiorX(objetoSelecionado.BBox.obterMaiorX+1);
+          objetoSelecionado.TranslacaoXYZ(1, 0, 0);
         }
       } else if (e.Key == Key.Up && objetoSelecionado != null){
-        objetoSelecionado.TranslacaoXYZ(0, 0, -2);
+        Console.WriteLine(objetoSelecionado.BBox.ToString());
+        objetoSelecionado.BBox.AtualizarMenorZ(objetoSelecionado.BBox.obterMenorZ-1);
+        objetoSelecionado.BBox.AtualizarMaiorZ(objetoSelecionado.BBox.obterMaiorZ-1);
+        Console.WriteLine(objetoSelecionado.BBox.ToString());
+        objetoSelecionado.TranslacaoXYZ(0, 0, -1);
       } else if (e.Key == Key.Down && objetoSelecionado != null){
-        objetoSelecionado.TranslacaoXYZ(0, 0, 2);
+        objetoSelecionado.BBox.AtualizarMenorZ(objetoSelecionado.BBox.obterMenorZ+1);
+        objetoSelecionado.BBox.AtualizarMaiorZ(objetoSelecionado.BBox.obterMaiorZ+1);
+        objetoSelecionado.TranslacaoXYZ(0, 0, 1);
       } else if (e.Key == Key.M && objetoSelecionado != null){
         objetoSelecionado.MatrizToString();
       }

@@ -11,12 +11,13 @@ namespace gcgcg
         private float Zmin;
         public bool isParede;
 
-        public Cubo(char rotulo, Objeto pai, float xmin, float xmax, float zmin, float zmax, bool isParede) : base(rotulo, pai)
+        public Cubo(char rotulo, Objeto pai, float xmin, float xmax, float zmin, float zmax, bool boolParede) : base(rotulo, pai)
         {
             Xmin = xmin;
             Xmax = xmax;
             Zmin = zmin;
             Zmax = zmax;
+            isParede = boolParede;
             base.PontosAdicionar(new Ponto4D(xmin,-1,zmax));
             base.PontosAdicionar(new Ponto4D(xmax,-1,zmax));
             base.PontosAdicionar(new Ponto4D(xmax,1,zmax));

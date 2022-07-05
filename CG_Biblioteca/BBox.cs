@@ -21,6 +21,22 @@ namespace CG_Biblioteca
       this.maiorX = pto.X; this.maiorY = pto.Y; this.maiorZ = pto.Z;
     }
 
+    public void AtualizarMaiorZ(double zmax){
+      maiorZ = zmax;
+    }
+
+    public void AtualizarMenorZ(double zmin){
+      menorZ = zmin;
+    }
+
+    public void AtualizarMenorX(double xmin){
+      menorX = xmin;
+    }
+
+    public void AtualizarMaiorX(double xmax){
+      maiorX = xmax;
+    }
+
     public void Atualizar(Ponto4D pto)
     {
       Atualizar(pto.X, pto.Y, pto.Z);
