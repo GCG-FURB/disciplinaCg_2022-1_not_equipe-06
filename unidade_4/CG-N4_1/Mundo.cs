@@ -45,9 +45,10 @@ namespace gcgcg
     private float fovy, aspect, near, far;
     private Vector3 eye, at, up;
     private float speed = 1.5f;
-    double xSpeed = 0.1;
-    double zSpeed = 0.1;
+    double xSpeed = 0.4;
+    double zSpeed = 0.4;
     private int _score;
+    private Thread t1;
 #if CG_Privado
     private Privado_SegReta obj_SegReta;
     private Privado_Circulo obj_Circulo;
@@ -80,7 +81,7 @@ namespace gcgcg
       //Parede direita
       objetoId = Utilitario.charProximo(objetoId);
       obj_Cubo = new Cubo(objetoId, null, 25, 27, -1, 30, true);
-      obj_Cubo.ObjetoCor.CorR = 0; obj_Cubo.ObjetoCor.CorG = 0; obj_Cubo.ObjetoCor.CorB = 0;
+      obj_Cubo.ObjetoCor.CorR = 255; obj_Cubo.ObjetoCor.CorG = 0; obj_Cubo.ObjetoCor.CorB = 0;
       objetosLista.Add(obj_Cubo);
       
       //Parede esquerda
@@ -121,16 +122,25 @@ namespace gcgcg
       criarNovaLinha();
       criarNovaLinha();
 
-      //GL.ClearColor(1.5f, 1.5f, 0.5f, 1.0f);
-        //    GL.Enable(EnableCap.DepthTest);
-          //  GL.Enable(EnableCap.CullFace);
-            //GL.Enable(EnableCap.Lighting);
-            //GL.Enable(EnableCap.ColorMaterial);
+      GL.ClearColor(1.5f, 1.5f, 0.5f, 1.0f);
+      GL.Enable(EnableCap.DepthTest);
+      GL.Enable(EnableCap.CullFace);
+      GL.Enable(EnableCap.Lighting);
+      GL.Enable(EnableCap.ColorMaterial);
 
-            //GL.Enable(EnableCap.Light0);
-            //GL.Light(LightName.Light0, LightParameter.Position, new float[] { 15, 15, 0 });
-            //GL.Light(LightName.Light0, LightParameter.Diffuse, new float[] { 1f, 1f, 1f });
+      GL.Enable(EnableCap.Light0);
+      GL.Light(LightName.Light0, LightParameter.Position, new float[] { 10, 80, 40 });
+      GL.Light(LightName.Light0, LightParameter.Diffuse, new float[] { 1f, 1f, 1f });
 
+      t1 = new Thread(() =>
+      {
+        while(true){
+          criarNovaLinha();
+          Thread.Sleep(5000);
+        }
+      });
+      t1.Start();
+           
 #if CG_Privado
       /*objetoId = Utilitario.charProximo(objetoId);
       obj_SegReta = new Privado_SegReta(objetoId, null, new Ponto4D(50, 150), new Ponto4D(150, 250));
@@ -158,10 +168,6 @@ namespace gcgcg
     protected override void OnUpdateFrame(FrameEventArgs e)
     {
       base.OnUpdateFrame(e);
-      //var th = new Thread(criarNovaLinha);
-      //th.Start();
-      //Thread.Sleep(5000);
-      //Console.WriteLine("passou");
     }
     protected override void OnRenderFrame(FrameEventArgs e)
     {
@@ -180,11 +186,6 @@ namespace gcgcg
         objetoSelecionado.BBox.Desenhar();
       TratamentoColisao();
       //criarNovaLinha();
-      //Task t = Task.Factory.StartNew(() =>
-      //      {
-      //          criarNovaLinha()
-      //          Thread.Sleep(5000);
-      //      });
       movimentarBola();
       this.SwapBuffers();
     }
@@ -369,6 +370,7 @@ namespace gcgcg
 #if CG_Gizmo
     private void Sru3D()
     {
+      /*
       GL.LineWidth(1);
       GL.Begin(PrimitiveType.Lines);
       //GL.Color3(1.0f,0.0f,0.0f);
@@ -380,7 +382,7 @@ namespace gcgcg
       // GL.Color3(0.0f,0.0f,1.0f);
       GL.Color3(Convert.ToByte(0), Convert.ToByte(0), Convert.ToByte(255));
       GL.Vertex3(0, 0, 0); GL.Vertex3(0, 0, 10);
-      GL.End();
+      GL.End();*/
     }
 #endif    
   }
